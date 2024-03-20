@@ -7,4 +7,8 @@ export class Artist extends BaseEntity {
 
     @Column()
     name: string;
+
+    static async existsByName(name: string): Promise<boolean> {
+        return await this.existsBy({name: name})
+    }
 }
