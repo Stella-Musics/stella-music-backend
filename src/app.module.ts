@@ -4,6 +4,7 @@ import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";  
 import { Artist } from "./domain/artist/entity/artist.entity";
+import { ArtistGenerator } from "./domain/artist/generator/artist.generator";
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { Artist } from "./domain/artist/entity/artist.entity";
     })
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [AppService, ArtistGenerator]
 })
 export class AppModule {}
