@@ -11,25 +11,11 @@ export class ArtistGenerator implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    if (!await this.artistRepository.existsBy({name: '스텔라이브'}))
-        await this.artistRepository.save({name: '스텔라이브'});
+    const artists = ['스텔라이브', '아야츠노 유니', '아이리 칸나', '시라유키 히나', '아라하시 타비', '네네코 마시로', '아카네 리제'];
 
-    if (!await this.artistRepository.existsBy({name: '아야츠노 유니'}))
-        await this.artistRepository.save({name: '아야츠노 유니'});
-
-    if (!await this.artistRepository.existsBy({name: '아이리 칸나'}))
-        await this.artistRepository.save({name: '아이리 칸나'});
-
-    if (!await this.artistRepository.existsBy({name: '시라유키 히나'}))
-        await this.artistRepository.save({name: '시라유키 히나'});
-
-    if (!await this.artistRepository.existsBy({name: '아라하시 타비'}))
-        await this.artistRepository.save({name: '아라하시 타비'});
-
-    if (!await this.artistRepository.existsBy({name: '네네코 마시로'}))
-        await this.artistRepository.save({name: '네네코 마시로'});
-
-    if (!await this.artistRepository.existsBy({name: '아카네 리제'}))
-        await Artist.save({name: '아카네 리제'});
+    artists.forEach(async artist => {
+        if (!await this.artistRepository.existsBy({name: artist}))
+            await this.artistRepository.save({name: artist})
+    })
   }
 }
