@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { ConfigModule } from "@nestjs/config";  
+import { ConfigModule } from "@nestjs/config";
 import { Artist } from "./domain/artist/entity/artist.entity";
 import { ArtistGenerator } from "./domain/artist/generator/artist.generator";
 import { Repository } from "typeorm";
@@ -23,9 +23,7 @@ import { Repository } from "typeorm";
       entities: [Artist],
       synchronize: true
     }),
-    TypeOrmModule.forFeature([
-      Artist
-    ])
+    TypeOrmModule.forFeature([Artist])
   ],
   controllers: [AppController],
   providers: [AppService, ArtistGenerator, Repository]
