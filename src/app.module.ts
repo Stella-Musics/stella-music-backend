@@ -2,7 +2,8 @@ import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";  
+import { Artist } from "./domain/artist/entity/artist.entity";
 
 @Module({
   imports: [
@@ -17,8 +18,8 @@ import { ConfigModule } from "@nestjs/config";
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [],
-      synchronize: false
+      entities: [Artist],
+      synchronize: true
     })
   ],
   controllers: [AppController],
