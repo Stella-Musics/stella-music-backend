@@ -5,6 +5,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";  
 import { Artist } from "./domain/artist/entity/artist.entity";
 import { ArtistGenerator } from "./domain/artist/generator/artist.generator";
+import { Repository } from "typeorm";
 
 @Module({
   imports: [
@@ -21,9 +22,12 @@ import { ArtistGenerator } from "./domain/artist/generator/artist.generator";
       database: process.env.DATABASE_NAME,
       entities: [Artist],
       synchronize: true
-    })
+    }),
+    TypeOrmModule.forFeature([
+      Artist
+    ])
   ],
   controllers: [AppController],
-  providers: [AppService, ArtistGenerator]
+  providers: [AppService, ArtistGenerator, Repository]
 })
 export class AppModule {}
