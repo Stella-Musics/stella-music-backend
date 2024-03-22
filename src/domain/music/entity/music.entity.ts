@@ -16,15 +16,6 @@ export class Music {
   views: number;
 
   @Column()
-  viewsOfWeek: number;
-
-  @Column()
-  viewsOfDay: number;
-
-  @Column()
-  viewsOfTime: number;
-
-  @Column()
   uploadedDate: Date;
 
   @Column()
