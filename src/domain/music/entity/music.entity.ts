@@ -19,7 +19,10 @@ export class Music {
   uploadedDate: Date;
 
   @Column()
-  karaokeCode: number;
+  TJKaraokeCode: number;
+
+  @Column()
+  KYKaraokeCode: number;
 
   @ManyToOne(() => Artist)
   artist: Artist;
