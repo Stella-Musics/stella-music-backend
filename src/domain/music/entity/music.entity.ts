@@ -10,7 +10,7 @@ export class Music {
   name: string;
 
   @Column()
-  youtubeUrl: string;
+  youtubeId: string;
 
   @Column()
   views: number;
