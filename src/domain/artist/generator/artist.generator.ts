@@ -22,9 +22,8 @@ export class ArtistGenerator implements OnModuleInit {
     ];
 
     artists.forEach(async (artist) => {
-      const isExist = await this.artistRepository.existsBy({ name: artist })
-      if (!isExist)
-        await this.artistRepository.save({ name: artist });
+      const isExist = await this.artistRepository.existsBy({ name: artist });
+      if (!isExist) await this.artistRepository.save({ name: artist });
     });
   }
 }
