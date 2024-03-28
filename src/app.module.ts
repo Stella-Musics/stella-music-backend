@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { Artist } from "./domain/artist/entity/artist.entity";
@@ -24,7 +23,7 @@ import { Music } from "./domain/music/entity/music.entity";
     }),
     TypeOrmModule.forFeature([Artist])
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [ArtistGenerator]
 })
 export class AppModule {}
