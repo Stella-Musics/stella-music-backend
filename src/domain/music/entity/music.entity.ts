@@ -1,5 +1,4 @@
-import { Artist } from "src/domain/artist/entity/artist.entity";
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class Music {
@@ -23,7 +22,4 @@ export class Music {
 
   @Column()
   KYKaraokeCode: number;
-
-  @ManyToOne(() => Artist)
-  artist: Artist;
 }
