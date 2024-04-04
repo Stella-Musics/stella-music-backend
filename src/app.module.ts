@@ -4,6 +4,7 @@ import { ConfigModule } from "@nestjs/config";
 import { Artist } from "./domain/artist/entity/artist.entity";
 import { ArtistGenerator } from "./domain/artist/generator/artist.generator";
 import { Music } from "./domain/music/entity/music.entity";
+import { Participant } from "./domain/participant/entity/participant.entity";
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { Music } from "./domain/music/entity/music.entity";
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [Artist, Music],
+      entities: [Artist, Music, Participant],
       synchronize: true
     }),
     TypeOrmModule.forFeature([Artist])
