@@ -2,7 +2,7 @@ import { Music } from "src/domain/music/entity/music.entity";
 import { Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class ChartOfHour {
+export class ChartOfDay {
   @PrimaryGeneratedColumn()
   readonly id: number;
   @ManyToOne(() => Music)
