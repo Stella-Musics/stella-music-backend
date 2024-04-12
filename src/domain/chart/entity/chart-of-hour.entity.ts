@@ -10,5 +10,6 @@ export class ChartOfHour {
   readonly music: Music;
   readonly views: number;
   readonly ranking: number;
+  readonly rise: number;
   readonly createdAt: Date;
 }
