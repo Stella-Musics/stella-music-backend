@@ -5,6 +5,11 @@ import { Artist } from "./domain/artist/entity/artist.entity";
 import { ArtistGenerator } from "./domain/artist/generator/artist.generator";
 import { Music } from "./domain/music/entity/music.entity";
 import { Participant } from "./domain/participant/entity/participant.entity";
+import { ChartOfWeek } from "./domain/chart/entity/chart-of-week.entity";
+import { ChartOfDay } from "./domain/chart/entity/chart-of-day.entity";
+import { ChartOfHour } from "./domain/chart/entity/chart-of-hour.entity";
+import { ChartOfMonth } from "./domain/chart/entity/chart-of-month.entity";
+import { ChartOfYear } from "./domain/chart/entity/chart-of-year.entity";
 
 @Module({
   imports: [
@@ -19,7 +24,16 @@ import { Participant } from "./domain/participant/entity/participant.entity";
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [Artist, Music, Participant],
+      entities: [
+        Artist,
+        Music,
+        Participant,
+        ChartOfWeek,
+        ChartOfDay,
+        ChartOfHour,
+        ChartOfMonth,
+        ChartOfYear
+      ],
       synchronize: true
     }),
     TypeOrmModule.forFeature([Artist])
