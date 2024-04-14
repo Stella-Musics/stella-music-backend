@@ -8,6 +8,7 @@ import { Participant } from "./domain/participant/entity/participant.entity";
 import { ChartOfWeek } from "./domain/chart/entity/chart-of-week.entity";
 import { ChartOfDay } from "./domain/chart/entity/chart-of-day.entity";
 import { ChartOfHour } from "./domain/chart/entity/chart-of-hour.entity";
+import { ChartOfMonth } from "./domain/chart/entity/chart-of-month.entity";
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { ChartOfHour } from "./domain/chart/entity/chart-of-hour.entity";
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
-      entities: [Artist, Music, Participant, ChartOfWeek, ChartOfDay, ChartOfHour],
+      entities: [Artist, Music, Participant, ChartOfWeek, ChartOfDay, ChartOfHour, ChartOfMonth],
       synchronize: true
     }),
     TypeOrmModule.forFeature([Artist])
