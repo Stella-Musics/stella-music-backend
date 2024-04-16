@@ -10,6 +10,11 @@ import { ChartOfDay } from "./domain/chart/entity/chart-of-day.entity";
 import { ChartOfHour } from "./domain/chart/entity/chart-of-hour.entity";
 import { ChartOfMonth } from "./domain/chart/entity/chart-of-month.entity";
 import { ChartOfYear } from "./domain/chart/entity/chart-of-year.entity";
+import { ViewsOfWeek } from "./domain/music/entity/views-of-week.entity";
+import { ViewsOfDay } from "./domain/music/entity/views-of-day.entity";
+import { ViewsOfHour } from "./domain/music/entity/views-of-hour.entity";
+import { ViewsOfMonth } from "./domain/music/entity/views-of-month.entity";
+import { ViewsOfYear } from "./domain/music/entity/views-of-year.entity";
 
 @Module({
   imports: [
@@ -32,7 +37,12 @@ import { ChartOfYear } from "./domain/chart/entity/chart-of-year.entity";
         ChartOfDay,
         ChartOfHour,
         ChartOfMonth,
-        ChartOfYear
+        ChartOfYear,
+        ViewsOfWeek,
+        ViewsOfDay,
+        ViewsOfHour,
+        ViewsOfMonth,
+        ViewsOfYear
       ],
       synchronize: true
     }),

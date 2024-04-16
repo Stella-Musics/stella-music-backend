@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } f
 import { Music } from "./music.entity";
 
 @Entity()
-export class ViewsOfWeek {
+export class ViewsOfYear {
   @PrimaryGeneratedColumn()
   id: number;
 
