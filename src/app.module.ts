@@ -15,6 +15,7 @@ import { ViewsOfDay } from "./domain/music/entity/views-of-day.entity";
 import { ViewsOfHour } from "./domain/music/entity/views-of-hour.entity";
 import { ViewsOfMonth } from "./domain/music/entity/views-of-month.entity";
 import { ViewsOfYear } from "./domain/music/entity/views-of-year.entity";
+import { YoutubeUtils } from "./global/thridparty/youtube/youtube.util";
 
 @Module({
   imports: [
@@ -49,6 +50,6 @@ import { ViewsOfYear } from "./domain/music/entity/views-of-year.entity";
     TypeOrmModule.forFeature([Artist])
   ],
   controllers: [],
-  providers: [ArtistGenerator]
+  providers: [ArtistGenerator, YoutubeUtils]
 })
 export class AppModule {}
