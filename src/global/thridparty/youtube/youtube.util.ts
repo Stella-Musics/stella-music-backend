@@ -23,13 +23,13 @@ export class YoutubeUtils {
 
     console.log(videoList);
 
-    const videoInfoList = videoList.map((video) => {
-      return new VideoInfoDto(
-        video.id ?? "",
-        video.snippet?.title ?? "",
-        video.statistics?.viewCount ?? "",
-        new Date(video.snippet?.publishedAt ?? "")
-      );
+    const videoInfoList: VideoInfoDto[] = videoList.map((video) => {
+      return {
+        videoId: video.id ?? "",
+        title: video.snippet?.title ?? "",
+        viewCount: video.statistics?.viewCount ?? "",
+        uploadedDate: new Date(video.snippet?.publishedAt ?? "")
+      };
     });
 
     return videoInfoList;
