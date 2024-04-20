@@ -27,7 +27,6 @@ export class YoutubeUtils {
       return new VideoInfoDto(
         video.id ?? "",
         video.snippet?.title ?? "",
-        video.snippet?.description ?? "",
         video.statistics?.viewCount ?? "",
         new Date(video.snippet?.publishedAt ?? "")
       );
