@@ -7,7 +7,7 @@ import { VideoInfoDto } from "./dto/video-info.dto";
 export class YoutubeUtils {
   constructor(private readonly configService: ConfigService) {}
 
-  async getVideoInfo(videoIdList: string[]): Promise<VideoInfoDto[]> {
+  async getVideoInfos(videoIdList: string[]): Promise<VideoInfoDto[]> {
     const youtube = google.youtube({
       version: "v3",
       auth: this.configService.get<string>("YOUTUBE_SECRET_KEY")
