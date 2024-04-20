@@ -21,8 +21,6 @@ export class YoutubeUtils {
     const videoList = (await response).data.items;
     if (videoList == null) throw new Error("영상 정보를 가져올 수 없음");
 
-    console.log(videoList);
-
     const videoInfoList: VideoInfoDto[] = videoList.map((video) => {
       return {
         videoId: video.id ?? "",
