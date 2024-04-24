@@ -16,6 +16,7 @@ import { ViewsOfHour } from "./domain/music/entity/views-of-hour.entity";
 import { ViewsOfMonth } from "./domain/music/entity/views-of-month.entity";
 import { ViewsOfYear } from "./domain/music/entity/views-of-year.entity";
 import { YoutubeUtils } from "./global/thridparty/youtube/youtube.util";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { YoutubeUtils } from "./global/thridparty/youtube/youtube.util";
       ],
       synchronize: true
     }),
-    TypeOrmModule.forFeature([Artist])
+    TypeOrmModule.forFeature([Artist]),
+    ScheduleModule.forRoot()
   ],
   controllers: [],
   providers: [ArtistGenerator, YoutubeUtils]
