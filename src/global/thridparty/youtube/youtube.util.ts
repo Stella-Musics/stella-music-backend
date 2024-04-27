@@ -25,7 +25,7 @@ export class YoutubeUtils {
       return {
         videoId: video.id ?? "",
         title: video.snippet?.title ?? "",
-        viewCount: video.statistics?.viewCount ?? "",
+        viewCount: +(video.statistics?.viewCount ?? 0),
         uploadedDate: new Date(video.snippet?.publishedAt ?? "")
       };
     });
