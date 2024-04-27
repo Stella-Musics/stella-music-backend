@@ -19,7 +19,7 @@ export class MusicInfoScheduler {
     private readonly chartOfHourRepository: Repository<ChartOfHour>
   ) {}
 
-  @Cron("59 59 * * * *")
+  @Cron("0 0 * * * *")
   async getMusicInfoEachHour() {
     const musicList = await this.musicRepository.find();
 
