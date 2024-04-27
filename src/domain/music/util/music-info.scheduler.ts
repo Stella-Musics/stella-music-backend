@@ -12,6 +12,8 @@ import { ViewsOfMonth } from "../entity/views-of-month.entity";
 import { ChartOfMonth } from "src/domain/chart/entity/chart-of-month.entity";
 import { ViewsOfWeek } from "../entity/views-of-week.entity";
 import { ChartOfWeek } from "src/domain/chart/entity/chart-of-week.entity";
+import { ViewsOfYear } from "../entity/views-of-year.entity";
+import { ChartOfYear } from "src/domain/chart/entity/chart-of-year.entity";
 
 @Injectable()
 export class MusicInfoScheduler {
@@ -34,7 +36,11 @@ export class MusicInfoScheduler {
     @InjectRepository(ViewsOfWeek)
     private readonly viewsOfWeekRepository: Repository<ViewsOfWeek>,
     @InjectRepository(ChartOfWeek)
-    private readonly chartOfWeekRepository: Repository<ChartOfWeek>
+    private readonly chartOfWeekRepository: Repository<ChartOfWeek>,
+    @InjectRepository(ViewsOfYear)
+    private readonly viewsOfYearRepository: Repository<ViewsOfYear>,
+    @InjectRepository(ChartOfYear)
+    private readonly chartOfYearRepository: Repository<ChartOfYear>
   ) {}
 
   @Cron(CronExpression.EVERY_HOUR)
@@ -220,6 +226,53 @@ export class MusicInfoScheduler {
           views: chartOfWeek.views,
           ranking: index + 1,
           rise: chartOfWeek.ranking - (index + 1)
+        }
+      );
+    });
+  }
+
+  @Cron(CronExpression.EVERY_YEAR)
+  async getMusicInfoEachYear() {
+    const musicList = await this.musicRepository.find();
+
+    const musicIdList = musicList.map((music) => {
+      return music.id;
+    });
+
+    const musicInfoList = await this.youtubeUtils.getVideoInfos(musicIdList);
+
+    const viewsOfYearList = await Promise.all(
+      musicInfoList.map(async (musicInfo) => {
+        const musicId = musicInfo.videoId;
+        const music = musicList.find((music) => music.id === musicId);
+        return await this.viewsOfYearRepository.save({
+          views: musicInfo.viewCount,
+          music: music,
+          createdAt: Date()
+        });
+      })
+    );
+    viewsOfYearList.sort((a: ViewsOfYear, b: ViewsOfYear) => b.views - a.views);
+
+    viewsOfYearList.forEach(async (viewsOfYear, index) => {
+      const chartOfYear =
+        (await this.chartOfYearRepository.findOneBy({ music: viewsOfYear.music })) ??
+        (await this.chartOfYearRepository.save({
+          music: viewsOfYear.music,
+          views: viewsOfYear.views,
+          ranking: index + 1,
+          rise: 0,
+          createdAt: Date()
+        }));
+
+      this.chartOfYearRepository.update(
+        {
+          id: chartOfYear.id
+        },
+        {
+          views: chartOfYear.views,
+          ranking: index + 1,
+          rise: chartOfYear.ranking - (index + 1)
         }
       );
     });
