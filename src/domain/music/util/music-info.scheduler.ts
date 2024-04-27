@@ -231,7 +231,7 @@ export class MusicInfoScheduler {
     });
   }
 
-  @Cron(CronExpression.EVERY_YEAR)
+  @Cron("0 0 1 1 *")
   async getMusicInfoEachYear() {
     const musicList = await this.musicRepository.find();
 
