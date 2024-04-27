@@ -49,7 +49,21 @@ import { MusicInfoScheduler } from "./domain/music/util/music-info.scheduler";
       ],
       synchronize: true
     }),
-    TypeOrmModule.forFeature([Artist]),
+    TypeOrmModule.forFeature([
+      Artist,
+      Music,
+      Participant,
+      ChartOfWeek,
+      ChartOfDay,
+      ChartOfHour,
+      ChartOfMonth,
+      ChartOfYear,
+      ViewsOfWeek,
+      ViewsOfDay,
+      ViewsOfHour,
+      ViewsOfMonth,
+      ViewsOfYear
+    ]),
     ScheduleModule.forRoot()
   ],
   controllers: [],

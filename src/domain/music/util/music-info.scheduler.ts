@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Cron } from "@nestjs/schedule";
+import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import { YoutubeUtils } from "src/global/thridparty/youtube/youtube.util";
 import { Music } from "../entity/music.entity";
@@ -19,7 +19,7 @@ export class MusicInfoScheduler {
     private readonly chartOfHourRepository: Repository<ChartOfHour>
   ) {}
 
-  @Cron("0 0 * * * *")
+  @Cron(CronExpression.EVERY_HOUR)
   async getMusicInfoEachHour() {
     const musicList = await this.musicRepository.find();
 
