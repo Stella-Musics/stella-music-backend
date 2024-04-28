@@ -17,7 +17,11 @@ import { ViewsOfMonth } from "./domain/music/entity/views-of-month.entity";
 import { ViewsOfYear } from "./domain/music/entity/views-of-year.entity";
 import { YoutubeUtils } from "./global/thridparty/youtube/youtube.util";
 import { ScheduleModule } from "@nestjs/schedule";
-import { MusicInfoScheduler } from "./domain/music/util/music-info.scheduler";
+import { MusicInfoEachDayScheduler } from "./domain/music/util/music-info-each-day.scheduler";
+import { MusicInfoEachHourScheduler } from "./domain/music/util/music-info-each-hour.shceduler";
+import { MusicInfoEachMonthScheduler } from "./domain/music/util/music-info-each-month.scheduler";
+import { MusicInfoEachWeekScheduler } from "./domain/music/util/music-info-each-week.scheduler";
+import { MusicInfoEachYearScheduler } from "./domain/music/util/music-info-each-year.scheduler";
 
 @Module({
   imports: [
@@ -67,6 +71,14 @@ import { MusicInfoScheduler } from "./domain/music/util/music-info.scheduler";
     ScheduleModule.forRoot()
   ],
   controllers: [],
-  providers: [ArtistGenerator, YoutubeUtils, MusicInfoScheduler]
+  providers: [
+    ArtistGenerator,
+    YoutubeUtils,
+    MusicInfoEachDayScheduler,
+    MusicInfoEachHourScheduler,
+    MusicInfoEachMonthScheduler,
+    MusicInfoEachWeekScheduler,
+    MusicInfoEachYearScheduler
+  ]
 })
 export class AppModule {}
