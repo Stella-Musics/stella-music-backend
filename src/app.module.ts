@@ -16,6 +16,12 @@ import { ViewsOfHour } from "./domain/music/entity/views-of-hour.entity";
 import { ViewsOfMonth } from "./domain/music/entity/views-of-month.entity";
 import { ViewsOfYear } from "./domain/music/entity/views-of-year.entity";
 import { YoutubeUtils } from "./global/thridparty/youtube/youtube.util";
+import { ScheduleModule } from "@nestjs/schedule";
+import { MusicInfoEachDayScheduler } from "./domain/music/util/music-info-each-day.scheduler";
+import { MusicInfoEachHourScheduler } from "./domain/music/util/music-info-each-hour.shceduler";
+import { MusicInfoEachMonthScheduler } from "./domain/music/util/music-info-each-month.scheduler";
+import { MusicInfoEachWeekScheduler } from "./domain/music/util/music-info-each-week.scheduler";
+import { MusicInfoEachYearScheduler } from "./domain/music/util/music-info-each-year.scheduler";
 
 @Module({
   imports: [
@@ -47,9 +53,32 @@ import { YoutubeUtils } from "./global/thridparty/youtube/youtube.util";
       ],
       synchronize: true
     }),
-    TypeOrmModule.forFeature([Artist])
+    TypeOrmModule.forFeature([
+      Artist,
+      Music,
+      Participant,
+      ChartOfWeek,
+      ChartOfDay,
+      ChartOfHour,
+      ChartOfMonth,
+      ChartOfYear,
+      ViewsOfWeek,
+      ViewsOfDay,
+      ViewsOfHour,
+      ViewsOfMonth,
+      ViewsOfYear
+    ]),
+    ScheduleModule.forRoot()
   ],
   controllers: [],
-  providers: [ArtistGenerator, YoutubeUtils]
+  providers: [
+    ArtistGenerator,
+    YoutubeUtils,
+    MusicInfoEachDayScheduler,
+    MusicInfoEachHourScheduler,
+    MusicInfoEachMonthScheduler,
+    MusicInfoEachWeekScheduler,
+    MusicInfoEachYearScheduler
+  ]
 })
 export class AppModule {}

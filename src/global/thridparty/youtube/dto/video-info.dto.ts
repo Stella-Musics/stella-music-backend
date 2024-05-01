@@ -1,6 +1,6 @@
 export interface VideoInfoDto {
   videoId: string;
   title: string;
-  viewCount: string;
+  viewCount: number;
   uploadedDate: Date;
 }
