@@ -1,17 +1,5 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Music } from "./music.entity";
+import { Entity } from "typeorm";
+import { BaseViewsEntity } from "./base/base-views.entity";
 
 @Entity()
-export class ViewsOfWeek {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Column()
-  views: number;
-
-  @ManyToOne(() => Music)
-  music: Music;
-
-  @CreateDateColumn()
-  readonly createdAt: Date;
-}
+export class ViewsOfWeek extends BaseViewsEntity {}
