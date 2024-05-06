@@ -13,4 +13,10 @@ export abstract class BaseViewsEntity {
 
   @CreateDateColumn()
   readonly createdAt: Date;
+
+  constructor(views: number, music: Music, createdDate: Date) {
+    this.views = views;
+    this.music = music;
+    this.createdAt = createdDate;
+  }
 }
