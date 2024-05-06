@@ -1,10 +1,10 @@
 import { Cron } from "@nestjs/schedule";
 import { ViewsOfYear } from "../entity/views-of-year.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ChartOfYear } from "src/domain/chart/entity/chart-of-year.entity";
 import { Repository } from "typeorm";
 import { YoutubeUtils } from "src/global/thridparty/youtube/youtube.util";
 import { Music } from "../entity/music.entity";
+import { MusicSchedulerUtil } from "./music-scheduler.util";
 
 export class MusicInfoEachYearScheduler {
   constructor(
@@ -13,8 +13,7 @@ export class MusicInfoEachYearScheduler {
     private readonly musicRepository: Repository<Music>,
     @InjectRepository(ViewsOfYear)
     private readonly viewsOfYearRepository: Repository<ViewsOfYear>,
-    @InjectRepository(ChartOfYear)
-    private readonly chartOfYearRepository: Repository<ChartOfYear>
+    private readonly musicSchedulerUtil: MusicSchedulerUtil
   ) {}
 
   @Cron("0 0 1 1 *")
@@ -41,26 +40,7 @@ export class MusicInfoEachYearScheduler {
     viewsOfYearList.sort((a: ViewsOfYear, b: ViewsOfYear) => b.views - a.views);
 
     viewsOfYearList.forEach(async (viewsOfYear, index) => {
-      const chartOfYear =
-        (await this.chartOfYearRepository.findOneBy({ music: viewsOfYear.music })) ??
-        (await this.chartOfYearRepository.save({
-          music: viewsOfYear.music,
-          views: viewsOfYear.views,
-          ranking: index + 1,
-          rise: 0,
-          createdAt: Date()
-        }));
-
-      this.chartOfYearRepository.update(
-        {
-          id: chartOfYear.id
-        },
-        {
-          views: chartOfYear.views,
-          ranking: index + 1,
-          rise: chartOfYear.ranking - (index + 1)
-        }
-      );
+      await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfYear, index);
     });
   }
 }

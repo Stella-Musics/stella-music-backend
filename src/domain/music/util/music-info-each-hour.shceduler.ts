@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import { Music } from "../entity/music.entity";
 import { YoutubeUtils } from "src/global/thridparty/youtube/youtube.util";
 import { ViewsOfHour } from "../entity/views-of-hour.entity";
-import { ChartOfHour } from "src/domain/chart/entity/chart-of-hour.entity";
+import { MusicSchedulerUtil } from "./music-scheduler.util";
 
 @Injectable()
 export class MusicInfoEachHourScheduler {
@@ -14,8 +14,7 @@ export class MusicInfoEachHourScheduler {
     private readonly musicRepository: Repository<Music>,
     @InjectRepository(ViewsOfHour)
     private readonly viewsOfHourRepository: Repository<ViewsOfHour>,
-    @InjectRepository(ChartOfHour)
-    private readonly chartOfHourRepository: Repository<ChartOfHour>,
+    private readonly musicSchedulerUtil: MusicSchedulerUtil,
     private readonly youtubeUtils: YoutubeUtils
   ) {}
 
@@ -43,26 +42,7 @@ export class MusicInfoEachHourScheduler {
     viewsOfHourList.sort((a: ViewsOfHour, b: ViewsOfHour) => b.views - a.views);
 
     viewsOfHourList.forEach(async (viewsOfHour, index) => {
-      const chartOfHour =
-        (await this.chartOfHourRepository.findOneBy({ music: viewsOfHour.music })) ??
-        (await this.chartOfHourRepository.save({
-          music: viewsOfHour.music,
-          views: viewsOfHour.views,
-          ranking: index + 1,
-          rise: 0,
-          createdAt: Date()
-        }));
-
-      this.chartOfHourRepository.update(
-        {
-          id: chartOfHour.id
-        },
-        {
-          views: viewsOfHour.views,
-          ranking: index + 1,
-          rise: chartOfHour.ranking - (index + 1)
-        }
-      );
+      await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfHour, index);
     });
   }
 }
