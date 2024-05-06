@@ -22,6 +22,7 @@ import { MusicInfoEachHourScheduler } from "./domain/music/util/music-info-each-
 import { MusicInfoEachMonthScheduler } from "./domain/music/util/music-info-each-month.scheduler";
 import { MusicInfoEachWeekScheduler } from "./domain/music/util/music-info-each-week.scheduler";
 import { MusicInfoEachYearScheduler } from "./domain/music/util/music-info-each-year.scheduler";
+import { MusicSchedulerUtil } from "./domain/music/util/music-scheduler.util";
 
 @Module({
   imports: [
@@ -78,7 +79,8 @@ import { MusicInfoEachYearScheduler } from "./domain/music/util/music-info-each-
     MusicInfoEachHourScheduler,
     MusicInfoEachMonthScheduler,
     MusicInfoEachWeekScheduler,
-    MusicInfoEachYearScheduler
+    MusicInfoEachYearScheduler,
+    MusicSchedulerUtil
   ]
 })
 export class AppModule {}
