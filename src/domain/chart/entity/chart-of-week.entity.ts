@@ -1,19 +1,5 @@
-import { Music } from "src/domain/music/entity/music.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Entity } from "typeorm";
+import { BaseChartEntity } from "./base/base-chart.entity";
 
 @Entity()
-export class ChartOfWeek {
-  @PrimaryGeneratedColumn()
-  readonly id: number;
-  @OneToOne(() => Music)
-  @JoinColumn()
-  readonly music: Music;
-  @Column()
-  readonly views: number;
-  @Column()
-  readonly ranking: number;
-  @Column()
-  readonly rise: number;
-  @Column()
-  readonly createdAt: Date;
-}
+export class ChartOfWeek extends BaseChartEntity {}

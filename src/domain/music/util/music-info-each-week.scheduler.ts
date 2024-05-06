@@ -1,10 +1,10 @@
 import { Cron, CronExpression } from "@nestjs/schedule";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ViewsOfWeek } from "../entity/views-of-week.entity";
-import { ChartOfWeek } from "src/domain/chart/entity/chart-of-week.entity";
 import { Repository } from "typeorm";
 import { YoutubeUtils } from "src/global/thridparty/youtube/youtube.util";
 import { Music } from "../entity/music.entity";
+import { MusicSchedulerUtil } from "./music-scheduler.util";
 
 export class MusicInfoEachWeekScheduler {
   constructor(
@@ -13,8 +13,7 @@ export class MusicInfoEachWeekScheduler {
     private readonly musicRepository: Repository<Music>,
     @InjectRepository(ViewsOfWeek)
     private readonly viewsOfWeekRepository: Repository<ViewsOfWeek>,
-    @InjectRepository(ChartOfWeek)
-    private readonly chartOfWeekRepository: Repository<ChartOfWeek>
+    private readonly musicSchedulerUtil: MusicSchedulerUtil
   ) {}
 
   @Cron(CronExpression.EVERY_WEEK)
@@ -31,36 +30,17 @@ export class MusicInfoEachWeekScheduler {
       musicInfoList.map(async (musicInfo) => {
         const musicId = musicInfo.videoId;
         const music = musicList.find((music) => music.id === musicId);
-        return await this.viewsOfWeekRepository.save({
-          views: musicInfo.viewCount,
-          music: music,
-          createdAt: Date()
-        });
+
+        if (music == undefined) throw new Error("this music is not found");
+
+        const viewsOfWeek = new ViewsOfWeek(musicInfo.viewCount, music, new Date());
+        return await this.viewsOfWeekRepository.save(viewsOfWeek);
       })
     );
     viewsOfWeekList.sort((a: ViewsOfWeek, b: ViewsOfWeek) => b.views - a.views);
 
     viewsOfWeekList.forEach(async (viewsOfWeek, index) => {
-      const chartOfWeek =
-        (await this.chartOfWeekRepository.findOneBy({ music: viewsOfWeek.music })) ??
-        (await this.chartOfWeekRepository.save({
-          music: viewsOfWeek.music,
-          views: viewsOfWeek.views,
-          ranking: index + 1,
-          rise: 0,
-          createdAt: Date()
-        }));
-
-      this.chartOfWeekRepository.update(
-        {
-          id: chartOfWeek.id
-        },
-        {
-          views: chartOfWeek.views,
-          ranking: index + 1,
-          rise: chartOfWeek.ranking - (index + 1)
-        }
-      );
+      await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfWeek, index);
     });
   }
 }
