@@ -32,11 +32,11 @@ export class MusicInfoEachDayScheduler {
       musicInfoList.map(async (musicInfo) => {
         const musicId = musicInfo.videoId;
         const music = musicList.find((music) => music.id === musicId);
-        return await this.viewsOfDayRepository.save({
-          views: musicInfo.viewCount,
-          music: music,
-          createdAt: Date()
-        });
+
+        if (music == undefined) throw new Error("this music is not found");
+
+        const viewsOfDay = new ViewsOfDay(musicInfo.viewCount, music!, new Date());
+        return await this.viewsOfDayRepository.save(viewsOfDay);
       })
     );
     viewsOfDayList.sort((a: ViewsOfDay, b: ViewsOfDay) => b.views - a.views);

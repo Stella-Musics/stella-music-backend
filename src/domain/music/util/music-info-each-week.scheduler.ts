@@ -30,11 +30,11 @@ export class MusicInfoEachWeekScheduler {
       musicInfoList.map(async (musicInfo) => {
         const musicId = musicInfo.videoId;
         const music = musicList.find((music) => music.id === musicId);
-        return await this.viewsOfWeekRepository.save({
-          views: musicInfo.viewCount,
-          music: music,
-          createdAt: Date()
-        });
+
+        if (music == undefined) throw new Error("this music is not found");
+
+        const viewsOfWeek = new ViewsOfWeek(musicInfo.viewCount, music, new Date());
+        return await this.viewsOfWeekRepository.save(viewsOfWeek);
       })
     );
     viewsOfWeekList.sort((a: ViewsOfWeek, b: ViewsOfWeek) => b.views - a.views);

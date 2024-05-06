@@ -30,11 +30,11 @@ export class MusicInfoEachYearScheduler {
       musicInfoList.map(async (musicInfo) => {
         const musicId = musicInfo.videoId;
         const music = musicList.find((music) => music.id === musicId);
-        return await this.viewsOfYearRepository.save({
-          views: musicInfo.viewCount,
-          music: music,
-          createdAt: Date()
-        });
+
+        if (music == undefined) throw new Error("this music is not found");
+
+        const viewsOfYear = new ViewsOfYear(musicInfo.viewCount, music, new Date());
+        return await this.viewsOfYearRepository.save(viewsOfYear);
       })
     );
     viewsOfYearList.sort((a: ViewsOfYear, b: ViewsOfYear) => b.views - a.views);

@@ -32,11 +32,11 @@ export class MusicInfoEachHourScheduler {
       musicInfoList.map(async (musicInfo) => {
         const musicId = musicInfo.videoId;
         const music = musicList.find((music) => music.id === musicId);
-        return await this.viewsOfHourRepository.save({
-          views: musicInfo.viewCount,
-          music: music,
-          createdAt: Date()
-        });
+
+        if (music == undefined) throw new Error("this music is not found");
+
+        const viewsOfHour = new ViewsOfHour(musicInfo.viewCount, music!, new Date());
+        return await this.viewsOfHourRepository.save(viewsOfHour);
       })
     );
     viewsOfHourList.sort((a: ViewsOfHour, b: ViewsOfHour) => b.views - a.views);
