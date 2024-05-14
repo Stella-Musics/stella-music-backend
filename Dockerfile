@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:20.13.1
 COPY . .
 RUN npm install
 RUN npm run build
