@@ -18,7 +18,11 @@ export class ArtistGenerator implements OnModuleInit {
       "시라유키 히나",
       "아라하시 타비",
       "네네코 마시로",
-      "아카네 리제"
+      "아카네 리제",
+      "텐코 시부키",
+      "아오쿠모 린",
+      "하나코 나나",
+      "유즈하 리코"
     ];
 
     artists.forEach(async (artist) => {
