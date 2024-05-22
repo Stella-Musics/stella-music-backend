@@ -31,9 +31,9 @@ import { MusicSchedulerUtil } from "./domain/music/util/music-scheduler.util";
       envFilePath: process.env.ENV === "prod" ? ".prod.env" : ".dev.env"
     }),
     TypeOrmModule.forRoot({
-      type: "mysql",
+      type: "postgres",
       host: process.env.DATABASE_HOST,
-      port: 3306,
+      port: 5432,
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
