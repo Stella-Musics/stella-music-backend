@@ -52,7 +52,16 @@ import { MusicSchedulerUtil } from "./domain/music/util/music-scheduler.util";
         ViewsOfMonth,
         ViewsOfYear
       ],
-      synchronize: true
+      synchronize: true,
+      ssl: process.env.DATABASE_SSL === "true",
+      extra:
+        process.env.DATABASE_SSL === "true"
+          ? {
+              ssl: {
+                rejectUnauthorized: false
+              }
+            }
+          : {}
     }),
     TypeOrmModule.forFeature([
       Artist,
