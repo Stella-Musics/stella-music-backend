@@ -23,6 +23,7 @@ import { MusicInfoEachMonthScheduler } from "./domain/music/util/music-info-each
 import { MusicInfoEachWeekScheduler } from "./domain/music/util/music-info-each-week.scheduler";
 import { MusicInfoEachYearScheduler } from "./domain/music/util/music-info-each-year.scheduler";
 import { MusicSchedulerUtil } from "./domain/music/util/music-scheduler.util";
+import { MusicSchedulersController } from "./domain/music/presentation/music-scheduler.controller";
 
 @Module({
   imports: [
@@ -80,7 +81,7 @@ import { MusicSchedulerUtil } from "./domain/music/util/music-scheduler.util";
     ]),
     ScheduleModule.forRoot()
   ],
-  controllers: [],
+  controllers: [MusicSchedulersController],
   providers: [
     ArtistGenerator,
     YoutubeUtils,
