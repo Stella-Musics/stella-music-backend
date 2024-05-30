@@ -8,17 +8,16 @@ export class ApiKeyGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const apiKey = request.headers["api-key"];
-    const requiredApiKey = this.reflector.get<string>(API_KEY, context.getHandler());
-
-    if (!requiredApiKey || !this.validateApiKey(apiKey, requiredApiKey)) {
+    const apiKey = request.headers["api-key"] as string;
+    const comparedApiKey = this.reflector.get<string>(API_KEY, context.getHandler());
+    if (!comparedApiKey || !this.validateApiKey(apiKey, comparedApiKey)) {
       throw new HttpException("api key is not valid", 403);
     }
 
     return true;
   }
 
-  validateApiKey(apiKey: string | undefined, requiredApiKey: string): boolean {
-    return apiKey !== undefined && apiKey === requiredApiKey;
+  validateApiKey(apiKey: string, requiredApiKey: string): boolean {
+    return apiKey === requiredApiKey;
   }
 }
