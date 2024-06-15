@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { google } from "googleapis";
 import { VideoInfoDto } from "./dto/video-info.dto";
+import { ArrayUtil } from "src/global/util/array.util";
 
 @Injectable()
 export class YoutubeUtils {
@@ -12,23 +13,30 @@ export class YoutubeUtils {
       version: "v3",
       auth: this.configService.get<string>("YOUTUBE_SECRET_KEY")
     });
+    const videoInfoList: VideoInfoDto[] = [];
 
-    const response = youtube.videos.list({
-      part: ["snippet", "statistics", "contentDetails"],
-      id: videoIdList
-    });
+    const chunckedVideoIdList = await ArrayUtil.chunkArray(videoIdList, 50);
 
-    const videoList = (await response).data.items;
-    if (videoList == null) throw new Error("영상 정보를 가져올 수 없음");
+    const fetchVideoInfoPromises = chunckedVideoIdList.map(async (videoIdList) => {
+      const response = await youtube.videos.list({
+        part: ["snippet,contentDetails,statistics"],
+        id: videoIdList
+      });
 
-    const videoInfoList: VideoInfoDto[] = videoList.map((video) => {
-      return {
+      const videoList = response.data.items;
+      if (videoList == null) throw new Error("영상 정보를 가져올 수 없음");
+
+      const videoInfos = videoList.map((video) => ({
         videoId: video.id ?? "",
         title: video.snippet?.title ?? "",
         viewCount: +(video.statistics?.viewCount ?? 0),
         uploadedDate: new Date(video.snippet?.publishedAt ?? "")
-      };
+      }));
+
+      videoInfoList.push(...videoInfos);
     });
+
+    await Promise.all(fetchVideoInfoPromises);
 
     return videoInfoList;
   }
