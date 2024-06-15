@@ -20,35 +20,35 @@ export class MusicSchedulersController {
   @Post("day")
   @UseGuards(ApiKeyGuard)
   @ApiKey(process.env.MUSIC_INFO_EACH_DAY_API_KEY)
-  getMusicInfoEachDay() {
-    this.musicInfoEachDayScheduler.getMusicInfoEachDay();
+  async getMusicInfoEachDay() {
+    await this.musicInfoEachDayScheduler.getMusicInfoEachDay();
   }
 
   @Post("hour")
   @UseGuards(ApiKeyGuard)
   @ApiKey(process.env.MUSIC_INFO_EACH_HOUR_API_KEY)
-  getMusicInfoEachHour() {
-    this.musicInfoEachHourScheduler.getMusicInfoEachHour();
+  async getMusicInfoEachHour() {
+    await this.musicInfoEachHourScheduler.getMusicInfoEachHour();
   }
 
   @Post("month")
   @UseGuards(ApiKeyGuard)
   @ApiKey(process.env.MUSIC_INFO_EACH_MONTH_API_KEY)
-  getMusicInfoEachMonth() {
-    this.musicInfoEachMonthScheduler.getMusicInfoEachMonth();
+  async getMusicInfoEachMonth() {
+    await this.musicInfoEachMonthScheduler.getMusicInfoEachMonth();
   }
 
   @Post("week")
   @UseGuards(ApiKeyGuard)
   @ApiKey(process.env.MUSIC_INFO_EACH_WEEK_API_KEY)
-  getMusicInfoEachWeek() {
-    this.musicInfoEachWeekScheduler.getMusicInfoEachWeek();
+  async getMusicInfoEachWeek() {
+    await this.musicInfoEachWeekScheduler.getMusicInfoEachWeek();
   }
 
   @Post("year")
   @UseGuards(ApiKeyGuard)
   @ApiKey(process.env.MUSIC_INFO_EACH_YEAR_API_KEY)
-  getMusicInfoEachYear() {
-    this.musicInfoEachYearScheduler.getMusicInfoEachYear();
+  async getMusicInfoEachYear() {
+    await this.musicInfoEachYearScheduler.getMusicInfoEachYear();
   }
 }

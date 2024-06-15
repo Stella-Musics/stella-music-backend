@@ -44,8 +44,10 @@ export class MusicInfoEachHourScheduler {
     );
     viewsOfHourList.sort((a: ViewsOfHour, b: ViewsOfHour) => b.views - a.views);
 
-    viewsOfHourList.forEach(async (viewsOfHour, index) => {
-      await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfHour, index);
-    });
+    await Promise.all(
+      viewsOfHourList.map(async (viewsOfHour, index) => {
+        await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfHour, index);
+      })
+    );
   }
 }
