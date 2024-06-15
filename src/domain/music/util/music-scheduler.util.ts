@@ -34,10 +34,6 @@ export class MusicSchedulerUtil {
 
     const repository = repositoryMap[viewsEntity.constructor.name];
 
-    console.log(viewsEntity.constructor);
-    console.log(repositoryMap);
-    console.log(repository);
-
     const chart =
       (await repository.findOneBy({ music: viewsEntity.music })) ??
       (await repository.save({
