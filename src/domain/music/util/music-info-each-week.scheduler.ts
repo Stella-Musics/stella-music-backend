@@ -39,8 +39,10 @@ export class MusicInfoEachWeekScheduler {
     );
     viewsOfWeekList.sort((a: ViewsOfWeek, b: ViewsOfWeek) => b.views - a.views);
 
-    viewsOfWeekList.forEach(async (viewsOfWeek, index) => {
-      await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfWeek, index);
-    });
+    await Promise.all(
+      viewsOfWeekList.map(async (viewsOfWeek, index) => {
+        await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfWeek, index);
+      })
+    );
   }
 }

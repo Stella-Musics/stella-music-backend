@@ -14,7 +14,7 @@ export class MusicInfoEachDayScheduler {
     private readonly musicRepository: Repository<Music>,
     @InjectRepository(ViewsOfDay)
     private readonly viewsOfDayRepository: Repository<ViewsOfDay>,
-    private readonly musicSchdulerUtil: MusicSchedulerUtil,
+    private readonly musicSchedulerUtil: MusicSchedulerUtil,
     private readonly youtubeUtils: YoutubeUtils
   ) {}
 
@@ -41,8 +41,10 @@ export class MusicInfoEachDayScheduler {
     );
     viewsOfDayList.sort((a: ViewsOfDay, b: ViewsOfDay) => b.views - a.views);
 
-    viewsOfDayList.forEach(async (viewsOfDay, index) => {
-      await this.musicSchdulerUtil.saveChartEntityByViewsEntity(viewsOfDay, index);
-    });
+    await Promise.all(
+      viewsOfDayList.map(async (viewsOfDay, index) => {
+        await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfDay, index);
+      })
+    );
   }
 }

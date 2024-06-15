@@ -39,8 +39,10 @@ export class MusicInfoEachMonthScheduler {
     );
     viewsOfMonthList.sort((a: ViewsOfMonth, b: ViewsOfMonth) => b.views - a.views);
 
-    viewsOfMonthList.forEach(async (viewsOfMonth, index) => {
-      await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfMonth, index);
-    });
+    await Promise.all(
+      viewsOfMonthList.map(async (viewsOfMonth, index) => {
+        await this.musicSchedulerUtil.saveChartEntityByViewsEntity(viewsOfMonth, index);
+      })
+    );
   }
 }
