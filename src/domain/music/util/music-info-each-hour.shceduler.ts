@@ -35,6 +35,9 @@ export class MusicInfoEachHourScheduler {
 
         if (music == undefined) throw new Error("this music is not found");
 
+        music.views = musicInfo.viewCount;
+        this.musicRepository.update(musicId, { views: musicInfo.viewCount });
+
         const viewsOfHour = new ViewsOfHour(musicInfo.viewCount, music!, new Date());
         return await this.viewsOfHourRepository.save(viewsOfHour);
       })
