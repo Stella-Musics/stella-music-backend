@@ -4,6 +4,7 @@ import { Music } from "../entity/music.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { MusicResponse } from "../data/response/music.response";
 import { MusicListResponse } from "../data/response/music-list.response";
+import { SortBy } from "../enum/sort-by.enum";
 
 @Injectable()
 export class MusicService {
@@ -12,24 +13,24 @@ export class MusicService {
     private readonly musicRepository: Repository<Music>
   ) {}
 
-  async getMusic(sortBy: string): Promise<MusicListResponse> {
+  async getMusic(sortBy: SortBy): Promise<MusicListResponse> {
     let musicList: Music[];
     switch (sortBy) {
-      case "UPLOAD":
+      case SortBy.UPLOAD:
         musicList = await this.musicRepository.find({
           order: {
             uploadedDate: "DESC"
           }
         });
         break;
-      case "OLDER":
+      case SortBy.OLDER:
         musicList = await this.musicRepository.find({
           order: {
             uploadedDate: "ASC"
           }
         });
         break;
-      case "VIEWS":
+      case SortBy.VIEWS:
         musicList = await this.musicRepository.find({
           order: {
             views: "DESC"
