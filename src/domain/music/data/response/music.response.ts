@@ -1,3 +1,5 @@
+import { ParticipantInfo } from "src/domain/participant/data/response/participant-info.response";
+
 export class MusicResponse {
   constructor(
     readonly id: string,
@@ -6,6 +8,7 @@ export class MusicResponse {
     readonly views: number,
     readonly uploadedDate: Date,
     readonly TJKaraokeCode: number,
-    readonly KYKaraokeCode: number
+    readonly KYKaraokeCode: number,
+    readonly participantInfos: ParticipantInfo[]
   ) {}
 }
