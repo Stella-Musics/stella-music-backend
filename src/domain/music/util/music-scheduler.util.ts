@@ -49,7 +49,7 @@ export class MusicSchedulerUtil {
         id: chart.id
       },
       {
-        views: chart.views,
+        views: viewsEntity.views,
         ranking: index + 1,
         rise: chart.ranking - (index + 1)
       }
