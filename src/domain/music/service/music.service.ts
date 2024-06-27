@@ -62,33 +62,62 @@ export class MusicService {
   }
 
   async getMusicChart(chartBy: ChartBy): Promise<MusicChartListResponse> {
-    const chartList = await this.getChartUtil.getChart(chartBy);
-    const musicChartResponseList = await Promise.all(
-      chartList.map(async (chart) => {
-        const music = chart.music;
-        const pariticipantList = await this.participantRepository.find({
-          where: { music },
-          relations: ["artist"]
-        });
-        const participantInfoList = await Promise.all(
-          pariticipantList.map(async (participant) => {
-            return new ParticipantInfo(participant.artist.id, participant.artist.name);
-          })
-        );
-        return new MusicChartResponse(
-          music.id,
-          music.name,
-          music.youtubeId,
-          music.views,
-          music.uploadedDate,
-          music.TJKaraokeCode,
-          music.KYKaraokeCode,
-          chart.rise,
-          participantInfoList
-        );
-      })
-    );
-    return new MusicChartListResponse(musicChartResponseList);
+    if (chartBy == ChartBy.TOTAL) {
+      const musicList = await this.musicRepository.find({ order: { views: "DESC" } });
+      const musicChartResponseList = await Promise.all(
+        musicList.map(async (music) => {
+          const pariticipantList = await this.participantRepository.find({
+            where: { music },
+            relations: ["artist"]
+          });
+          const participantInfoList = await Promise.all(
+            pariticipantList.map(async (participant) => {
+              return new ParticipantInfo(participant.artist.id, participant.artist.name);
+            })
+          );
+          return new MusicChartResponse(
+            music.id,
+            music.name,
+            music.youtubeId,
+            music.views,
+            music.uploadedDate,
+            music.TJKaraokeCode,
+            music.KYKaraokeCode,
+            0,
+            participantInfoList
+          );
+        })
+      );
+      return new MusicChartListResponse(musicChartResponseList);
+    } else {
+      const chartList = await this.getChartUtil.getChart(chartBy);
+      const musicChartResponseList = await Promise.all(
+        chartList.map(async (chart) => {
+          const music = chart.music;
+          const pariticipantList = await this.participantRepository.find({
+            where: { music },
+            relations: ["artist"]
+          });
+          const participantInfoList = await Promise.all(
+            pariticipantList.map(async (participant) => {
+              return new ParticipantInfo(participant.artist.id, participant.artist.name);
+            })
+          );
+          return new MusicChartResponse(
+            music.id,
+            music.name,
+            music.youtubeId,
+            music.views,
+            music.uploadedDate,
+            music.TJKaraokeCode,
+            music.KYKaraokeCode,
+            chart.rise,
+            participantInfoList
+          );
+        })
+      );
+      return new MusicChartListResponse(musicChartResponseList);
+    }
   }
 
   private async transformParticipantsToMusicResponse(
