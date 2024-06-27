@@ -7,8 +7,8 @@ export class MusicResponse {
     readonly youtubeId: string,
     readonly views: number,
     readonly uploadedDate: Date,
-    readonly TJKaraokeCode: number,
-    readonly KYKaraokeCode: number,
+    readonly TJKaraokeCode: number | null,
+    readonly KYKaraokeCode: number | null,
     readonly participantInfos: ParticipantInfo[]
   ) {}
 }

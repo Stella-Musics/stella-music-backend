@@ -17,9 +17,9 @@ export class Music {
   @Column()
   uploadedDate: Date;
 
-  @Column()
-  TJKaraokeCode: number;
+  @Column({ type: "integer", nullable: true })
+  TJKaraokeCode: number | null;
 
-  @Column()
-  KYKaraokeCode: number;
+  @Column({ type: "integer", nullable: true })
+  KYKaraokeCode: number | null;
 }
