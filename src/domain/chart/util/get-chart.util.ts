@@ -40,7 +40,10 @@ export class GetChartUtil {
     };
 
     const chartRepository = repositoryMap[chartBy];
-    const chartList = await chartRepository.find({ relations: ["music"] });
+    const chartList = await chartRepository.find({
+      relations: ["music"],
+      order: { views: "DESC" }
+    });
 
     return chartList;
   }

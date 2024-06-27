@@ -62,7 +62,7 @@ export class MusicService {
   }
 
   async getMusicChart(chartBy: ChartBy): Promise<MusicChartListResponse> {
-    const chartList = (await this.getChartUtil.getChart(chartBy)).sort((a, b) => b.views - a.views);
+    const chartList = await this.getChartUtil.getChart(chartBy);
     const musicChartResponseList = await Promise.all(
       chartList.map(async (chart) => {
         const music = chart.music;
