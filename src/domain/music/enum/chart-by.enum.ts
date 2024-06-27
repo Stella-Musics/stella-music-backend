@@ -4,5 +4,5 @@ export enum ChartBy {
   WEEK = "WEEK",
   MONTH = "MONTH",
   YEAR = "YEAR",
-  STACKED = "STACKED"
+  TOTAL = "TOTAL"
 }
