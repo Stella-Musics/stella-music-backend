@@ -10,6 +10,7 @@ export class MusicChartResponse {
     readonly TJKaraokeCode: number | null,
     readonly KYKaraokeCode: number | null,
     readonly rise: number,
+    readonly ranking: number,
     readonly participantInfos: ParticipantInfo[]
   ) {}
 }
