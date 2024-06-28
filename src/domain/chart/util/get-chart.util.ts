@@ -39,14 +39,22 @@ export class GetChartUtil {
       MONTH: this.chartOfWeekRepository,
       YEAR: this.chartOfYearRepository
     };
+    const chartTypeMap = {
+      [ChartBy.HOUR]: "chart_of_hour",
+      [ChartBy.DAY]: "chart_of_day",
+      [ChartBy.WEEK]: "chart_of_week",
+      [ChartBy.MONTH]: "chart_of_month",
+      [ChartBy.YEAR]: "chart_of_year"
+    };
+    const chartType = chartTypeMap[chartBy];
 
     const chartRepository = repositoryMap[chartBy];
     const rawResult = await chartRepository
-      .createQueryBuilder("chart")
-      .leftJoinAndSelect("chart.music", "music")
+      .createQueryBuilder(chartType)
+      .leftJoinAndSelect(`${chartType}.music`, "music")
       .leftJoin(Participant, "participant", "participant.musicId = music.id")
       .leftJoin(Artist, "artist", "participant.artistId = artist.id")
-      .select(["chart", "music", "participant.id", "artist.id", "artist.name"])
+      .select([`${chartType}.*`, "music", "participant.id", "artist.id", "artist.name"])
       .orderBy("music.views", "DESC")
       .getRawMany();
 
@@ -66,10 +74,10 @@ export class GetChartUtil {
             result.music_youtubeId,
             result.music_views,
             result.uploadedDate,
-            result.TJKaraokeCode,
-            result.KYKaraokeCode,
-            result.chart_rise,
-            result.chart_ranking,
+            result.music_TJKaraokeCode,
+            result.music_KYKaraokeCode,
+            result.rise,
+            result.ranking,
             [participantInfo]
           );
           chartMap.set(result.music_id, musicChartResponse);
