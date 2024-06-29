@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Participant } from "src/domain/participant/entity/participant.entity";
+import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
 
 @Entity()
 export class Music {
@@ -22,4 +23,7 @@ export class Music {
 
   @Column({ type: "integer", nullable: true })
   KYKaraokeCode: number | null;
+
+  @OneToMany(() => Participant, (participant) => participant.music)
+  participants: Participant[];
 }
