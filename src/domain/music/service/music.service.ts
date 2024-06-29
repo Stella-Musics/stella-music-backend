@@ -7,6 +7,10 @@ import { MusicListResponse } from "../data/response/music-list.response";
 import { SortBy } from "../enum/sort-by.enum";
 import { Participant } from "src/domain/participant/entity/participant.entity";
 import { ParticipantInfo } from "src/domain/participant/data/response/participant-info.response";
+import { ChartBy } from "../enum/chart-by.enum";
+import { GetChartUtil } from "src/domain/chart/util/get-chart.util";
+import { MusicChartListResponse } from "../data/response/music-chart-list.response";
+import { MusicChartResponse } from "../data/response/music-chart.response";
 
 @Injectable()
 export class MusicService {
@@ -14,7 +18,8 @@ export class MusicService {
     @InjectRepository(Music)
     private readonly musicRepository: Repository<Music>,
     @InjectRepository(Participant)
-    private readonly participantRepository: Repository<Participant>
+    private readonly participantRepository: Repository<Participant>,
+    private readonly getChartUtil: GetChartUtil
   ) {}
 
   async getMusic(sortBy: SortBy): Promise<MusicListResponse> {
@@ -54,6 +59,38 @@ export class MusicService {
     const musicResponseList = await this.transformParticipantsToMusicResponse(pariticipantList);
 
     return new MusicListResponse(musicResponseList);
+  }
+
+  async getMusicChart(chartBy: ChartBy): Promise<MusicChartListResponse> {
+    if (chartBy != ChartBy.TOTAL) {
+      const chartList = await this.getChartUtil.getChart(chartBy);
+      return new MusicChartListResponse(chartList);
+    }
+    const musicList = await this.musicRepository.find({ order: { views: "DESC" } });
+    const musicChartResponseList = await Promise.all(
+      musicList.map(async (music, index) => {
+        const pariticipantList = await this.participantRepository.find({
+          where: { music },
+          relations: ["artist"]
+        });
+        const participantInfoList = pariticipantList.map((participant) => {
+          return new ParticipantInfo(participant.artist.id, participant.artist.name);
+        });
+        return new MusicChartResponse(
+          music.id,
+          music.name,
+          music.youtubeId,
+          music.views,
+          music.uploadedDate,
+          music.TJKaraokeCode,
+          music.KYKaraokeCode,
+          0,
+          index + 1,
+          participantInfoList
+        );
+      })
+    );
+    return new MusicChartListResponse(musicChartResponseList);
   }
 
   private async transformParticipantsToMusicResponse(

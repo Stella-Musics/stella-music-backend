@@ -26,6 +26,7 @@ import { MusicSchedulerUtil } from "./domain/music/util/music-scheduler.util";
 import { MusicSchedulersController } from "./domain/music/presentation/music-scheduler.controller";
 import { MusicService } from "./domain/music/service/music.service";
 import { MusicController } from "./domain/music/presentation/music.controller";
+import { GetChartUtil } from "./domain/chart/util/get-chart.util";
 
 @Module({
   imports: [
@@ -93,7 +94,8 @@ import { MusicController } from "./domain/music/presentation/music.controller";
     MusicInfoEachWeekScheduler,
     MusicInfoEachYearScheduler,
     MusicSchedulerUtil,
-    MusicService
+    MusicService,
+    GetChartUtil
   ]
 })
 export class AppModule {}
