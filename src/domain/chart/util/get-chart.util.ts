@@ -62,28 +62,26 @@ export class GetChartUtil {
 
     const chartMap = new Map<string, MusicChartResponse>();
 
-    await Promise.all(
-      rawResult.map(async (result) => {
-        const participantInfo = new ParticipantInfo(result.artist_id, result.artist_name);
-        if (chartMap.has(result.music_id)) {
-          chartMap.get(result.music_id)?.participantInfos.push(participantInfo);
-        } else {
-          const musicChartResponse = new MusicChartResponse(
-            result.music_id,
-            result.music_name,
-            result.music_youtubeId,
-            result.music_views,
-            result.uploadedDate,
-            result.music_TJKaraokeCode,
-            result.music_KYKaraokeCode,
-            result.rise,
-            result.ranking,
-            [participantInfo]
-          );
-          chartMap.set(result.music_id, musicChartResponse);
-        }
-      })
-    );
+    rawResult.map((result) => {
+      const participantInfo = new ParticipantInfo(result.artist_id, result.artist_name);
+      if (chartMap.has(result.music_id)) {
+        chartMap.get(result.music_id)?.participantInfos.push(participantInfo);
+      } else {
+        const musicChartResponse = new MusicChartResponse(
+          result.music_id,
+          result.music_name,
+          result.music_youtubeId,
+          result.music_views,
+          result.uploadedDate,
+          result.music_TJKaraokeCode,
+          result.music_KYKaraokeCode,
+          result.rise,
+          result.ranking,
+          [participantInfo]
+        );
+        chartMap.set(result.music_id, musicChartResponse);
+      }
+    });
 
     return Array.from(chartMap.values());
   }

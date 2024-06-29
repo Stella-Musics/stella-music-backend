@@ -73,11 +73,9 @@ export class MusicService {
           where: { music },
           relations: ["artist"]
         });
-        const participantInfoList = await Promise.all(
-          pariticipantList.map(async (participant) => {
-            return new ParticipantInfo(participant.artist.id, participant.artist.name);
-          })
-        );
+        const participantInfoList = pariticipantList.map((participant) => {
+          return new ParticipantInfo(participant.artist.id, participant.artist.name);
+        });
         return new MusicChartResponse(
           music.id,
           music.name,
