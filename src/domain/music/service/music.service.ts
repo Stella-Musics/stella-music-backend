@@ -62,38 +62,37 @@ export class MusicService {
   }
 
   async getMusicChart(chartBy: ChartBy): Promise<MusicChartListResponse> {
-    if (chartBy == ChartBy.TOTAL) {
-      const musicList = await this.musicRepository.find({ order: { views: "DESC" } });
-      const musicChartResponseList = await Promise.all(
-        musicList.map(async (music, index) => {
-          const pariticipantList = await this.participantRepository.find({
-            where: { music },
-            relations: ["artist"]
-          });
-          const participantInfoList = await Promise.all(
-            pariticipantList.map(async (participant) => {
-              return new ParticipantInfo(participant.artist.id, participant.artist.name);
-            })
-          );
-          return new MusicChartResponse(
-            music.id,
-            music.name,
-            music.youtubeId,
-            music.views,
-            music.uploadedDate,
-            music.TJKaraokeCode,
-            music.KYKaraokeCode,
-            0,
-            index + 1,
-            participantInfoList
-          );
-        })
-      );
-      return new MusicChartListResponse(musicChartResponseList);
-    } else {
+    if (chartBy != ChartBy.TOTAL) {
       const chartList = await this.getChartUtil.getChart(chartBy);
       return new MusicChartListResponse(chartList);
     }
+    const musicList = await this.musicRepository.find({ order: { views: "DESC" } });
+    const musicChartResponseList = await Promise.all(
+      musicList.map(async (music, index) => {
+        const pariticipantList = await this.participantRepository.find({
+          where: { music },
+          relations: ["artist"]
+        });
+        const participantInfoList = await Promise.all(
+          pariticipantList.map(async (participant) => {
+            return new ParticipantInfo(participant.artist.id, participant.artist.name);
+          })
+        );
+        return new MusicChartResponse(
+          music.id,
+          music.name,
+          music.youtubeId,
+          music.views,
+          music.uploadedDate,
+          music.TJKaraokeCode,
+          music.KYKaraokeCode,
+          0,
+          index + 1,
+          participantInfoList
+        );
+      })
+    );
+    return new MusicChartListResponse(musicChartResponseList);
   }
 
   private async transformParticipantsToMusicResponse(
