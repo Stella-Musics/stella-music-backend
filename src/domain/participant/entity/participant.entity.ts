@@ -7,9 +7,9 @@ export class Participant {
   @PrimaryGeneratedColumn()
   readonly id: number;
 
-  @ManyToOne(() => Artist)
+  @ManyToOne(() => Artist, (artist) => artist.participants)
   readonly artist: Artist;
 
-  @ManyToOne(() => Music)
+  @ManyToOne(() => Music, (music) => music.participants)
   readonly music: Music;
 }
