@@ -54,11 +54,9 @@ export class GetChartUtil {
       .leftJoinAndSelect(`${chartType}.music`, "music")
       .leftJoin(Participant, "participant", "participant.musicId = music.id")
       .leftJoin(Artist, "artist", "participant.artistId = artist.id")
-      .select([`${chartType}.*`, "music", "participant.id", "artist.id", "artist.name"])
+      .select([`${chartType}.*`, "music", "artist.id", "artist.name"])
       .orderBy("music.views", "DESC")
       .getRawMany();
-
-    console.log(rawResult);
 
     const chartMap = new Map<string, MusicChartResponse>();
 
