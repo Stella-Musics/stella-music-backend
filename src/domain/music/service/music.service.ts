@@ -71,13 +71,13 @@ export class MusicService {
       const chartList = await this.getChartUtil.getChart(chartBy);
       return new MusicChartListResponse(chartList);
     }
-    const musicList = await this.musicRepository.find({ order: { views: "DESC" } });
+    const musicList = await this.musicRepository.find({
+      relations: ["participants", "participants.artist"],
+      order: { views: "DESC" }
+    });
     const musicChartResponseList = await Promise.all(
       musicList.map(async (music, index) => {
-        const pariticipantList = await this.participantRepository.find({
-          where: { music },
-          relations: ["artist"]
-        });
+        const pariticipantList = music.participants;
         const participantInfoList = pariticipantList.map((participant) => {
           return new ParticipantInfo(participant.artist.id, participant.artist.name);
         });
@@ -96,33 +96,5 @@ export class MusicService {
       })
     );
     return new MusicChartListResponse(musicChartResponseList);
-  }
-
-  private async transformParticipantsToMusicResponse(
-    participants: Participant[]
-  ): Promise<MusicResponse[]> {
-    const musicMap: { [key: string]: MusicResponse } = {};
-
-    participants.forEach((participant) => {
-      const music = participant.music;
-      const artist = participant.artist;
-
-      if (!musicMap[music.id]) {
-        musicMap[music.id] = new MusicResponse(
-          music.id,
-          music.name,
-          music.youtubeId,
-          music.views,
-          music.uploadedDate,
-          music.TJKaraokeCode,
-          music.KYKaraokeCode,
-          []
-        );
-      }
-
-      musicMap[music.id].participantInfos.push(new ParticipantInfo(artist.id, artist.name));
-    });
-
-    return Object.values(musicMap);
   }
 }
