@@ -23,40 +23,45 @@ export class MusicService {
   ) {}
 
   async getMusic(sortBy: SortBy): Promise<MusicListResponse> {
-    let pariticipantList: Participant[];
+    let musicList: Music[];
     switch (sortBy) {
       case SortBy.UPLOAD:
-        pariticipantList = await this.participantRepository
-          .createQueryBuilder("participant")
-          .leftJoinAndSelect("participant.music", "music")
-          .leftJoinAndSelect("participant.artist", "artist")
-          .select(["participant", "music", "artist"])
-          .orderBy("music.uploadedDate", "DESC")
-          .getMany();
+        musicList = await this.musicRepository.find({
+          relations: ["participants", "participants.artist"],
+          order: { uploadedDate: "DESC" }
+        });
         break;
       case SortBy.OLDER:
-        pariticipantList = await this.participantRepository
-          .createQueryBuilder("participant")
-          .leftJoinAndSelect("participant.music", "music")
-          .leftJoinAndSelect("participant.artist", "artist")
-          .select(["participant", "music", "artist"])
-          .orderBy("music.uploadedDate", "ASC")
-          .getMany();
+        musicList = await this.musicRepository.find({
+          relations: ["participants", "participants.artist"],
+          order: { uploadedDate: "ASC" }
+        });
         break;
       case SortBy.VIEWS:
-        pariticipantList = await this.participantRepository
-          .createQueryBuilder("participant")
-          .leftJoinAndSelect("participant.music", "music")
-          .leftJoinAndSelect("participant.artist", "artist")
-          .select(["participant", "music", "artist"])
-          .orderBy("music.views", "DESC")
-          .getMany();
+        musicList = await this.musicRepository.find({
+          relations: ["participants", "participants.artist"],
+          order: { views: "DESC" }
+        });
         break;
       default:
         throw new HttpException("sorting filter is not valid", 400);
     }
 
-    const musicResponseList = await this.transformParticipantsToMusicResponse(pariticipantList);
+    const musicResponseList = musicList.map((music) => {
+      const participantInfos = music.participants.map((pariticipant) => {
+        return new ParticipantInfo(pariticipant.artist.id, pariticipant.artist.name);
+      });
+      return new MusicResponse(
+        music.id,
+        music.name,
+        music.youtubeId,
+        music.views,
+        music.uploadedDate,
+        music.TJKaraokeCode,
+        music.KYKaraokeCode,
+        participantInfos
+      );
+    });
 
     return new MusicListResponse(musicResponseList);
   }
@@ -66,13 +71,13 @@ export class MusicService {
       const chartList = await this.getChartUtil.getChart(chartBy);
       return new MusicChartListResponse(chartList);
     }
-    const musicList = await this.musicRepository.find({ order: { views: "DESC" } });
+    const musicList = await this.musicRepository.find({
+      relations: ["participants", "participants.artist"],
+      order: { views: "DESC" }
+    });
     const musicChartResponseList = await Promise.all(
       musicList.map(async (music, index) => {
-        const pariticipantList = await this.participantRepository.find({
-          where: { music },
-          relations: ["artist"]
-        });
+        const pariticipantList = music.participants;
         const participantInfoList = pariticipantList.map((participant) => {
           return new ParticipantInfo(participant.artist.id, participant.artist.name);
         });
@@ -91,33 +96,5 @@ export class MusicService {
       })
     );
     return new MusicChartListResponse(musicChartResponseList);
-  }
-
-  private async transformParticipantsToMusicResponse(
-    participants: Participant[]
-  ): Promise<MusicResponse[]> {
-    const musicMap: { [key: string]: MusicResponse } = {};
-
-    participants.forEach((participant) => {
-      const music = participant.music;
-      const artist = participant.artist;
-
-      if (!musicMap[music.id]) {
-        musicMap[music.id] = new MusicResponse(
-          music.id,
-          music.name,
-          music.youtubeId,
-          music.views,
-          music.uploadedDate,
-          music.TJKaraokeCode,
-          music.KYKaraokeCode,
-          []
-        );
-      }
-
-      musicMap[music.id].participantInfos.push(new ParticipantInfo(artist.id, artist.name));
-    });
-
-    return Object.values(musicMap);
   }
 }
