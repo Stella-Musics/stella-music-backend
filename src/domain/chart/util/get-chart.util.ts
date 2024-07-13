@@ -43,7 +43,7 @@ export class GetChartUtil {
     const chartRepository = repositoryMap[chartBy] as Repository<T>;
     const rawResult = await chartRepository.find({
       relations: ["music", "music.participants", "music.participants.artist"],
-      order: { ranking: "DESC" } as FindOptionsOrder<T>
+      order: { ranking: "ASC" } as FindOptionsOrder<T>
     });
 
     const chartResponseList = rawResult.map((result) => {
