@@ -9,6 +9,15 @@ export class Artist extends BaseEntity {
   @Column()
   name: string;
 
+  @Column()
+  chzzkUrl: string;
+
+  @Column()
+  youtubeUrl: string;
+
+  @Column()
+  youtueMusicUrl: string | null;
+
   @OneToMany(() => Participant, (participant) => participant.artist)
   participants: Participant[];
 }
