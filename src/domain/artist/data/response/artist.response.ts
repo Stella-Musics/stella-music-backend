@@ -4,6 +4,6 @@ export class AritstResponse {
     readonly name: string,
     readonly chzzkUrl: string,
     readonly youtubeUrl: string,
-    readonly youtubeMusicUrl: string
+    readonly youtubeMusicUrl: string | null
   ) {}
 }
