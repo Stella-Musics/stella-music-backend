@@ -13,7 +13,7 @@ export class ArtistService {
   ) {}
 
   async getArtist(): Promise<AritstListResponse> {
-    const artistList = await this.artistRepository.find();
+    const artistList = await this.artistRepository.find({ relations: ["urls"] });
 
     const aristsResponseList = artistList.map((artist) => {
       const urlList = artist.urls.map((urlEntity) => {
