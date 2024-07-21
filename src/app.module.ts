@@ -29,6 +29,7 @@ import { MusicController } from "./domain/music/presentation/music.controller";
 import { GetChartUtil } from "./domain/chart/util/get-chart.util";
 import { ArtistService } from "./domain/artist/service/artist.service";
 import { ArtistController } from "./domain/artist/presentation/artist.controller";
+import { ChannelUrl } from "./domain/artist/entity/channel-url.entity";
 
 @Module({
   imports: [
@@ -56,7 +57,8 @@ import { ArtistController } from "./domain/artist/presentation/artist.controller
         ViewsOfDay,
         ViewsOfHour,
         ViewsOfMonth,
-        ViewsOfYear
+        ViewsOfYear,
+        ChannelUrl
       ],
       synchronize: true,
       ssl: process.env.DATABASE_SSL === "true",
