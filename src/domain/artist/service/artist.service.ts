@@ -16,13 +16,14 @@ export class ArtistService {
     const artistList = await this.artistRepository.find();
 
     const aristsResponseList = artistList.map((artist) => {
-      return new AritstResponse(
-        artist.id,
-        artist.name,
-        artist.chzzkUrl,
-        artist.youtubeUrl,
-        artist.youtueMusicUrl
-      );
+      const urlList = artist.urls.map((urlEntity) => {
+        return {
+          name: urlEntity.name,
+          url: urlEntity.url
+        };
+      });
+
+      return new AritstResponse(artist.id, artist.name, urlList);
     });
 
     return new AritstListResponse(aristsResponseList);
