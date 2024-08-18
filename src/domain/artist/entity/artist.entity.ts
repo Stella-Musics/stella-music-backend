@@ -16,6 +16,6 @@ export class Artist extends BaseEntity {
   @OneToMany(() => ChannelUrl, (channelUrl) => channelUrl.artist)
   urls: ChannelUrl[];
 
-  @Column()
+  @Column({ type: "integer", nullable: true })
   period: number | null;
 }
