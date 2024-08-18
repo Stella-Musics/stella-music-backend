@@ -6,7 +6,7 @@ import { Repository } from "typeorm";
 class ArtistInfo {
   constructor(
     readonly name: string,
-    readonly period: number | null
+    readonly generation: number | null
   ) {}
 }
 
@@ -35,7 +35,10 @@ export class ArtistGenerator implements OnModuleInit {
     artistInfos.forEach(async (artistInfo) => {
       const isExist = await this.artistRepository.existsBy({ name: artistInfo.name });
       if (!isExist)
-        await this.artistRepository.save({ name: artistInfo.name, period: artistInfo.period });
+        await this.artistRepository.save({
+          name: artistInfo.name,
+          generation: artistInfo.generation
+        });
     });
   }
 }

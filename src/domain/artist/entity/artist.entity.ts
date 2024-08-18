@@ -17,5 +17,5 @@ export class Artist extends BaseEntity {
   urls: ChannelUrl[];
 
   @Column({ type: "integer", nullable: true })
-  period: number | null;
+  generation: number | null;
 }
