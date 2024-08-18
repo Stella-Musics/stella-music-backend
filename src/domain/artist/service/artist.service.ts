@@ -3,7 +3,7 @@ import { Repository } from "typeorm";
 import { Artist } from "../entity/artist.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ArtistResponse } from "../data/response/artist.response";
-import { ArtistByGenerationResponse } from "../data/response/artists-by-period.response";
+import { ArtistByGenerationResponse } from "../data/response/artists-by-generation.response";
 
 @Injectable()
 export class ArtistService {

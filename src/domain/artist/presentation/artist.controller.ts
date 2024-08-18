@@ -1,6 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { ArtistService } from "../service/artist.service";
-import { ArtistByGenerationResponse } from "../data/response/artists-by-period.response";
+import { ArtistByGenerationResponse } from "../data/response/artists-by-generation.response";
 
 @Controller("artists")
 export class ArtistController {
