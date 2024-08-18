@@ -1,13 +1,13 @@
 import { Controller, Get } from "@nestjs/common";
 import { ArtistService } from "../service/artist.service";
-import { AritstListResponse } from "../data/response/artist-list.response";
+import { ArtistByPeriodResponse } from "../data/response/artists-by-period.response";
 
 @Controller("artists")
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
-  async getArtists(): Promise<AritstListResponse> {
+  async getArtists(): Promise<ArtistByPeriodResponse> {
     return await this.artistService.getArtist();
   }
 }
