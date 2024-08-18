@@ -1,4 +1,4 @@
-export class AritstResponse {
+export class ArtistResponse {
   constructor(
     readonly id: number,
     readonly name: string,

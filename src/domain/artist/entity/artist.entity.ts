@@ -15,4 +15,7 @@ export class Artist extends BaseEntity {
 
   @OneToMany(() => ChannelUrl, (channelUrl) => channelUrl.artist)
   urls: ChannelUrl[];
+
+  @Column({ type: "integer", nullable: true })
+  generation: number | null;
 }
