@@ -3,7 +3,7 @@ import { Repository } from "typeorm";
 import { Artist } from "../entity/artist.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ArtistResponse } from "../data/response/artist.response";
-import { ArtistByPeriodResponse } from "../data/response/artists-by-period.response";
+import { ArtistByGenerationResponse } from "../data/response/artists-by-period.response";
 
 @Injectable()
 export class ArtistService {
@@ -12,7 +12,7 @@ export class ArtistService {
     readonly artistRepository: Repository<Artist>
   ) {}
 
-  async getArtist(): Promise<ArtistByPeriodResponse> {
+  async getArtist(): Promise<ArtistByGenerationResponse> {
     const artistList = await this.artistRepository.find({ relations: ["urls"] });
 
     const artistMap = new Map<number, ArtistResponse[]>();
@@ -24,13 +24,16 @@ export class ArtistService {
         };
       });
 
-      if (artistMap.has(artist.period ?? 0))
+      if (artistMap.has(artist.generation ?? 0))
         artistMap
-          .get(artist.period ?? 0)
+          .get(artist.generation ?? 0)
           ?.push(new ArtistResponse(artist.id, artist.name, urlList));
-      else artistMap.set(artist.period ?? 0, [new ArtistResponse(artist.id, artist.name, urlList)]);
+      else
+        artistMap.set(artist.generation ?? 0, [
+          new ArtistResponse(artist.id, artist.name, urlList)
+        ]);
     });
 
-    return new ArtistByPeriodResponse(artistMap);
+    return new ArtistByGenerationResponse(artistMap);
   }
 }
