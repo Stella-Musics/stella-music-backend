@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { Artist } from "../entity/artist.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { AritstResponse } from "../data/response/artist.response";
-import { AritstListResponse } from "../data/response/artist-list.response";
+import { ArtistResponse } from "../data/response/artist.response";
+import { ArtistListResponse } from "../data/response/artist-list.response";
 
 @Injectable()
 export class ArtistService {
@@ -12,7 +12,7 @@ export class ArtistService {
     readonly artistRepository: Repository<Artist>
   ) {}
 
-  async getArtist(): Promise<AritstListResponse> {
+  async getArtist(): Promise<ArtistListResponse> {
     const artistList = await this.artistRepository.find({ relations: ["urls"] });
 
     const aristsResponseList = artistList.map((artist) => {
@@ -23,9 +23,9 @@ export class ArtistService {
         };
       });
 
-      return new AritstResponse(artist.id, artist.name, urlList);
+      return new ArtistResponse(artist.id, artist.name, urlList);
     });
 
-    return new AritstListResponse(aristsResponseList);
+    return new ArtistListResponse(aristsResponseList);
   }
 }

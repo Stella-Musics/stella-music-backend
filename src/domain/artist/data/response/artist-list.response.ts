@@ -1,5 +1,5 @@
-import { AritstResponse } from "./artist.response";
+import { ArtistResponse } from "./artist.response";
 
-export class AritstListResponse {
-  constructor(readonly list: AritstResponse[]) {}
+export class ArtistListResponse {
+  constructor(readonly list: ArtistResponse[]) {}
 }
