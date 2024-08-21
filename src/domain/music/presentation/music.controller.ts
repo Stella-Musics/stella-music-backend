@@ -22,4 +22,9 @@ export class MusicController {
   ): Promise<MusicChartListResponse> {
     return await this.musicService.getMusicChart(chartBy);
   }
+
+  @Get("new")
+  async getNewestMusic(): Promise<MusicListResponse> {
+    return await this.musicService.getNewestMusic();
+  }
 }
