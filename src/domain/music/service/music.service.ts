@@ -97,4 +97,30 @@ export class MusicService {
     );
     return new MusicChartListResponse(musicChartResponseList);
   }
+
+  async getNewestMusic(): Promise<MusicListResponse> {
+    const musicList = await this.musicRepository.find({
+      relations: ["participants", "participants.artist"],
+      order: { uploadedDate: "DESC" },
+      take: 5
+    });
+
+    const musicResponseList = musicList.map((music) => {
+      const participantInfos = music.participants.map((pariticipant) => {
+        return new ParticipantInfo(pariticipant.artist.id, pariticipant.artist.name);
+      });
+      return new MusicResponse(
+        music.id,
+        music.name,
+        music.youtubeId,
+        music.views,
+        music.uploadedDate,
+        music.TJKaraokeCode,
+        music.KYKaraokeCode,
+        participantInfos
+      );
+    });
+
+    return new MusicListResponse(musicResponseList);
+  }
 }
