@@ -27,4 +27,9 @@ export class MusicController {
   async getNewestMusic(): Promise<MusicListResponse> {
     return await this.musicService.getNewestMusic();
   }
+
+  @Get("popular")
+  async getPopularMusic(): Promise<MusicListResponse> {
+    return await this.musicService.getPopularMusic();
+  }
 }
