@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { Music } from "../entity/music.entity";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -11,6 +11,7 @@ import { GetChartUtil } from "src/domain/chart/util/get-chart.util";
 import { MusicChartListResponse } from "../data/response/music-chart-list.response";
 import { MusicChartResponse } from "../data/response/music-chart.response";
 import { ChartOfDay } from "src/domain/chart/entity/chart-of-day.entity";
+import { Artist } from "src/domain/artist/entity/artist.entity";
 
 @Injectable()
 export class MusicService {
@@ -19,7 +20,9 @@ export class MusicService {
     private readonly musicRepository: Repository<Music>,
     @InjectRepository(ChartOfDay)
     private readonly chartOfDayRepository: Repository<ChartOfDay>,
-    private readonly getChartUtil: GetChartUtil
+    private readonly getChartUtil: GetChartUtil,
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>
   ) {}
 
   async getMusic(sortBy: SortBy): Promise<MusicListResponse> {
@@ -134,6 +137,39 @@ export class MusicService {
     const musicList = chartList.map((chart) => {
       return chart.music;
     });
+
+    const musicResponseList = musicList.map((music) => {
+      const participantInfos = music.participants.map((pariticipant) => {
+        return new ParticipantInfo(pariticipant.artist.id, pariticipant.artist.name);
+      });
+      return new MusicResponse(
+        music.id,
+        music.name,
+        music.youtubeId,
+        music.views,
+        music.uploadedDate,
+        music.TJKaraokeCode,
+        music.KYKaraokeCode,
+        participantInfos
+      );
+    });
+
+    return new MusicListResponse(musicResponseList);
+  }
+
+  async getMusicByArtist(artistId: number): Promise<MusicListResponse> {
+    const artist = await this.artistRepository.existsBy({
+      id: artistId
+    });
+    if (artist === false)
+      throw new HttpException("해당 아티스트를 찾을 수 없음", HttpStatus.NOT_FOUND);
+
+    const musicList = await this.musicRepository
+      .createQueryBuilder("music")
+      .leftJoinAndSelect("music.participants", "participant")
+      .leftJoinAndSelect("participant.artist", "artist")
+      .where("artist.id = :artistId", { artistId })
+      .getMany();
 
     const musicResponseList = musicList.map((music) => {
       const participantInfos = music.participants.map((pariticipant) => {
