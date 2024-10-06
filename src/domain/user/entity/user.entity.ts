@@ -14,7 +14,7 @@ export class User {
     type: "enum",
     enum: SocialType
   })
-  readonly socialyType: SocialType;
+  readonly socialType: SocialType;
   @Column({
     type: "enum",
     enum: Role
