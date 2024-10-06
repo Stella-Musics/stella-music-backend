@@ -30,6 +30,7 @@ import { GetChartUtil } from "./domain/chart/util/get-chart.util";
 import { ArtistService } from "./domain/artist/service/artist.service";
 import { ArtistController } from "./domain/artist/presentation/artist.controller";
 import { ChannelUrl } from "./domain/artist/entity/channel-url.entity";
+import { User } from "./domain/user/entity/user.entity";
 
 @Module({
   imports: [
@@ -58,7 +59,8 @@ import { ChannelUrl } from "./domain/artist/entity/channel-url.entity";
         ViewsOfHour,
         ViewsOfMonth,
         ViewsOfYear,
-        ChannelUrl
+        ChannelUrl,
+        User
       ],
       synchronize: true,
       ssl: process.env.DATABASE_SSL === "true",
