@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-google-oauth20";
+import { SocialType } from "src/domain/user/enums/social.type";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
@@ -15,7 +16,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     });
   }
 
-  // refreshToken을 얻고 싶다면 해당 메서드 설정 필수
   authorizationParams(): { [key: string]: string } {
     return {
       access_type: "offline",
@@ -24,17 +24,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
   }
 
   async validate(request: any, accessToken: string, refreshToken: string, profile, done: any) {
-    console.log(profile);
+    const { name, emails } = profile;
 
-    const { name, emails, provider } = profile;
-
-    const fullName = name.familyName + name.givenName;
+    const fullName = this.checkName(name.familyName, name.givenName);
     console.log(fullName);
 
     const email = emails[0].value;
     console.log(email);
 
-    console.log(provider);
+    const socialType = SocialType.GOOGLE;
+    console.log(socialType);
     try {
       const jwt = "";
       const user = {
@@ -45,5 +44,16 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
       console.error(err);
       done(err, false);
     }
+  }
+
+  private checkName(familyName: string, givenName: string): string {
+    if (familyName === undefined) {
+      familyName = "";
+    }
+    if (givenName === undefined) {
+      givenName = "";
+    }
+
+    return familyName + givenName;
   }
 }
