@@ -31,6 +31,8 @@ import { ArtistService } from "./domain/artist/service/artist.service";
 import { ArtistController } from "./domain/artist/presentation/artist.controller";
 import { ChannelUrl } from "./domain/artist/entity/channel-url.entity";
 import { User } from "./domain/user/entity/user.entity";
+import { AuthController } from "./domain/auth/controller/auth.controller";
+import { GoogleStrategy } from "./domain/auth/strategy/google.strategy";
 
 @Module({
   imports: [
@@ -90,7 +92,7 @@ import { User } from "./domain/user/entity/user.entity";
     ]),
     ScheduleModule.forRoot()
   ],
-  controllers: [MusicSchedulersController, MusicController, ArtistController],
+  controllers: [MusicSchedulersController, MusicController, ArtistController, AuthController],
   providers: [
     ArtistGenerator,
     YoutubeUtils,
@@ -102,7 +104,8 @@ import { User } from "./domain/user/entity/user.entity";
     MusicSchedulerUtil,
     MusicService,
     GetChartUtil,
-    ArtistService
+    ArtistService,
+    GoogleStrategy
   ]
 })
 export class AppModule {}
