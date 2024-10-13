@@ -3,10 +3,15 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-google-oauth20";
 import { SocialType } from "src/domain/user/enums/social.type";
+import { SocialUserDto } from "../service/dto/social.dto";
+import { AuthService } from "../service/auth.service";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    configService: ConfigService,
+    private readonly authService: AuthService
+  ) {
     super({
       clientID: configService.get<string>("GOOGLE_CLIENT_ID"),
       clientSecret: configService.get<string>("GOOGLE_CLIENT_PASSWORD"),
@@ -24,16 +29,23 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
   }
 
   async validate(request: any, accessToken: string, refreshToken: string, profile, done: any) {
-    const { name, emails } = profile;
+    const { name, id, emails } = profile;
 
     const fullName = this.checkName(name.familyName, name.givenName);
-    console.log(fullName);
 
     const email = emails[0].value;
-    console.log(email);
 
     const socialType = SocialType.GOOGLE;
-    console.log(socialType);
+
+    const socialUserDto = new SocialUserDto({
+      socialId: id,
+      email: email,
+      name: fullName,
+      socialType: socialType
+    });
+
+    this.authService.validateSocialUser(socialUserDto);
+
     try {
       const jwt = "";
       const user = {
@@ -41,7 +53,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
       };
       done(null, user);
     } catch (err) {
-      console.error(err);
       done(err, false);
     }
   }

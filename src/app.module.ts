@@ -33,6 +33,7 @@ import { ChannelUrl } from "./domain/artist/entity/channel-url.entity";
 import { User } from "./domain/user/entity/user.entity";
 import { AuthController } from "./domain/auth/controller/auth.controller";
 import { GoogleStrategy } from "./domain/auth/strategy/google.strategy";
+import { AuthService } from "./domain/auth/service/auth.service";
 
 @Module({
   imports: [
@@ -88,7 +89,8 @@ import { GoogleStrategy } from "./domain/auth/strategy/google.strategy";
       ViewsOfDay,
       ViewsOfHour,
       ViewsOfMonth,
-      ViewsOfYear
+      ViewsOfYear,
+      User
     ]),
     ScheduleModule.forRoot()
   ],
@@ -105,7 +107,8 @@ import { GoogleStrategy } from "./domain/auth/strategy/google.strategy";
     MusicService,
     GetChartUtil,
     ArtistService,
-    GoogleStrategy
+    GoogleStrategy,
+    AuthService
   ]
 })
 export class AppModule {}
