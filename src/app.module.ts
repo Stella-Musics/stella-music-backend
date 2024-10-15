@@ -34,6 +34,8 @@ import { User } from "./domain/user/entity/user.entity";
 import { AuthController } from "./domain/auth/controller/auth.controller";
 import { GoogleStrategy } from "./domain/auth/strategy/google.strategy";
 import { AuthService } from "./domain/auth/service/auth.service";
+import { JwtGenerator } from "./global/jwt/jwt.generator";
+import { JwtService } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -108,7 +110,9 @@ import { AuthService } from "./domain/auth/service/auth.service";
     GetChartUtil,
     ArtistService,
     GoogleStrategy,
-    AuthService
+    AuthService,
+    JwtGenerator,
+    JwtService
   ]
 })
 export class AppModule {}
