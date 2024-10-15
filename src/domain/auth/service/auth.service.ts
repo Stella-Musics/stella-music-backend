@@ -30,7 +30,6 @@ export class AuthService {
       socialType: updatedData.socialType,
       role: updatedData.role
     });
-    console.log(updatedUser);
     return await this.userRepository.save(updatedUser);
   }
 }

@@ -5,12 +5,14 @@ import { Strategy } from "passport-google-oauth20";
 import { SocialType } from "src/domain/user/enums/social.type";
 import { SocialUserDto } from "../service/dto/social.dto";
 import { AuthService } from "../service/auth.service";
+import { JwtGenerator } from "src/global/jwt/jwt.generator";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
   constructor(
-    configService: ConfigService,
-    private readonly authService: AuthService
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService,
+    private readonly jwtGenerator: JwtGenerator
   ) {
     super({
       clientID: configService.get<string>("GOOGLE_CLIENT_ID"),
@@ -44,14 +46,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
       socialType: socialType
     });
 
-    this.authService.validateSocialUser(socialUserDto);
+    const user = await this.authService.validateSocialUser(socialUserDto);
+    const tokenResponse = await this.jwtGenerator.generateToken(user);
 
     try {
-      const jwt = "";
-      const user = {
-        jwt
-      };
-      done(null, user);
+      done(null, tokenResponse);
     } catch (err) {
       done(err, false);
     }
