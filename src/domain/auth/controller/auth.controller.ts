@@ -1,10 +1,16 @@
-import { Controller, Get, UseGuards, Res, Req } from "@nestjs/common";
+import { Controller, Get, UseGuards, Res, Req, Post, Param, Headers } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard } from "@nestjs/passport";
+import { SocialType } from "src/domain/user/enums/social.type";
+import { AuthService } from "../service/auth.service";
+import { TokenResponse } from "../data/response/token.response";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly authSerivce: AuthService
+  ) {}
 
   @Get("google")
   @UseGuards(AuthGuard("google"))
@@ -20,5 +26,13 @@ export class AuthController {
       res.redirect(
         this.configService.get<string>("GOOGLE_FAILURE_URL") + "?message=" + req.err.message
       );
+  }
+
+  @Post(":socialType")
+  async loginSocial(
+    @Param("socialType") socialType: SocialType,
+    @Headers("authorization") accessToken: string
+  ): Promise<TokenResponse> {
+    return await this.authSerivce.signIn(socialType, accessToken);
   }
 }
