@@ -39,8 +39,7 @@ export class AuthService {
   }
 
   async signIn(socialType: SocialType, accessToken: string | null): Promise<TokenResponse> {
-    if (accessToken === null)
-      throw new HttpException("올바르지 않은 요청입니다.", HttpStatus.BAD_REQUEST);
+    if (!accessToken) throw new HttpException("올바르지 않은 요청입니다.", HttpStatus.BAD_REQUEST);
 
     if (socialType === SocialType.GOOGLE) {
       const user = await this.signInWithGoogle(accessToken);
@@ -53,7 +52,7 @@ export class AuthService {
       );
       return tokenResponse;
     } else {
-      throw new HttpException("지원되지 않는 소셜 로그인입니다.", HttpStatus.FORBIDDEN);
+      throw new HttpException("지원되지 않는 소셜 로그인입니다.", HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -71,6 +70,9 @@ export class AuthService {
     }
 
     const { name, id, email } = response.data;
+
+    if (!id || !name || !email)
+      throw new HttpException("유효하지 않은 프로필 정보입니다.", HttpStatus.BAD_REQUEST);
 
     const socialUserDto = new SocialUserDto({
       socialId: id,
