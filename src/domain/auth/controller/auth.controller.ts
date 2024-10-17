@@ -23,7 +23,7 @@ export class AuthController {
     if (accessToken)
       res.redirect(this.configService.get<string>("GOOGLE_SUCCESS_URL") + "?token=" + accessToken);
     else {
-      const errorMessage = req.err ? req.err.message : 'Unknown error';
+      const errorMessage = req.err ? req.err.message : "Unknown error";
       res.redirect(
         this.configService.get<string>("GOOGLE_FAILURE_URL") + "?message=" + errorMessage
       );

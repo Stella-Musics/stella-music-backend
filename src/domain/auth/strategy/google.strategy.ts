@@ -6,6 +6,7 @@ import { SocialType } from "src/domain/user/enums/social.type";
 import { SocialUserDto } from "../service/dto/social.dto";
 import { AuthService } from "../service/auth.service";
 import { JwtGenerator } from "src/global/jwt/jwt.generator";
+import { Profile } from "passport-google-oauth20";
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
@@ -38,33 +39,39 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     };
   }
 
-  async validate(request: any, accessToken: string, refreshToken: string, profile, done: any) {
-    const { name, id, emails } = profile;
+  async validate(
+    request: Request,
+    accessToken: string,
+    refreshToken: string,
+    profile: Profile,
+    done: (error: any, user?: any) => void
+  ) {
+    try {
+      const socialUserDto = this.createSocialUserDto(profile);
+      const user = await this.authService.validateSocialUser(socialUserDto);
+      const tokenResponse = await this.jwtGenerator.generateToken(user);
+      done(null, tokenResponse);
+    } catch (error) {
+      done(error, false);
+    }
+  }
 
-    if (!id || !name || !emails || emails.length === 0)
+  private createSocialUserDto(profile: Profile): SocialUserDto {
+    const { id, name, emails } = profile;
+
+    if (!id || !name || !emails || emails.length === 0) {
       throw new HttpException("유효하지 않은 프로필 정보입니다.", HttpStatus.BAD_REQUEST);
+    }
 
     const fullName = this.checkName(name.familyName, name.givenName);
-
     const email = emails[0].value;
 
-    const socialType = SocialType.GOOGLE;
-
-    const socialUserDto = new SocialUserDto({
+    return new SocialUserDto({
       socialId: id,
       email: email,
       name: fullName,
-      socialType: socialType
+      socialType: SocialType.GOOGLE
     });
-
-    const user = await this.authService.validateSocialUser(socialUserDto);
-    const tokenResponse = await this.jwtGenerator.generateToken(user);
-
-    try {
-      done(null, tokenResponse);
-    } catch (err) {
-      done(err, false);
-    }
   }
 
   private checkName(familyName: string = "", givenName: string = ""): string {
