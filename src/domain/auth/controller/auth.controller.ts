@@ -22,10 +22,12 @@ export class AuthController {
     const accessToken: string = req.user.accessToken;
     if (accessToken)
       res.redirect(this.configService.get<string>("GOOGLE_SUCCESS_URL") + "?token=" + accessToken);
-    else
+    else {
+      const errorMessage = req.err ? req.err.message : 'Unknown error';
       res.redirect(
-        this.configService.get<string>("GOOGLE_FAILURE_URL") + "?message=" + req.err.message
+        this.configService.get<string>("GOOGLE_FAILURE_URL") + "?message=" + errorMessage
       );
+    }
   }
 
   @Post(":socialType")
