@@ -14,10 +14,18 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     private readonly authService: AuthService,
     private readonly jwtGenerator: JwtGenerator
   ) {
+    const clientID = configService.get<string>("GOOGLE_CLIENT_ID");
+    const clientSecret = configService.get<string>("GOOGLE_CLIENT_SECRET");
+    const callbackURL = configService.get<string>("GOOGLE_CLIENT_REDIRECT_URL");
+
+    if (!clientID || !clientSecret || !callbackURL) {
+      throw new Error("Google OAuth 설정이 누락되었습니다.");
+    }
+
     super({
-      clientID: configService.get<string>("GOOGLE_CLIENT_ID"),
-      clientSecret: configService.get<string>("GOOGLE_CLIENT_SECRET"),
-      callbackURL: configService.get<string>("GOOGLE_CLIENT_REDIRECT_URL"),
+      clientID,
+      clientSecret,
+      callbackURL,
       passReqToCallback: true,
       scope: ["profile", "email"] // 가져올 정보들
     });
