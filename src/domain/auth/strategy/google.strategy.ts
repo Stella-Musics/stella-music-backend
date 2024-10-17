@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-google-oauth20";
@@ -32,6 +32,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
 
   async validate(request: any, accessToken: string, refreshToken: string, profile, done: any) {
     const { name, id, emails } = profile;
+
+    if (!id || !name || !emails || emails.length === 0)
+      throw new HttpException("유효하지 않은 프로필 정보입니다.", HttpStatus.BAD_REQUEST);
 
     const fullName = this.checkName(name.familyName, name.givenName);
 
