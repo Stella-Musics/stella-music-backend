@@ -56,14 +56,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
     }
   }
 
-  private checkName(familyName: string, givenName: string): string {
-    if (familyName === undefined) {
-      familyName = "";
-    }
-    if (givenName === undefined) {
-      givenName = "";
-    }
-
+  private checkName(familyName: string = "", givenName: string = ""): string {
     return familyName + givenName;
   }
 }
