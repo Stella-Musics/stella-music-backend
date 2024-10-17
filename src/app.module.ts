@@ -31,6 +31,11 @@ import { ArtistService } from "./domain/artist/service/artist.service";
 import { ArtistController } from "./domain/artist/presentation/artist.controller";
 import { ChannelUrl } from "./domain/artist/entity/channel-url.entity";
 import { User } from "./domain/user/entity/user.entity";
+import { AuthController } from "./domain/auth/controller/auth.controller";
+import { GoogleStrategy } from "./domain/auth/strategy/google.strategy";
+import { AuthService } from "./domain/auth/service/auth.service";
+import { JwtGenerator } from "./global/jwt/jwt.generator";
+import { JwtService } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -86,11 +91,12 @@ import { User } from "./domain/user/entity/user.entity";
       ViewsOfDay,
       ViewsOfHour,
       ViewsOfMonth,
-      ViewsOfYear
+      ViewsOfYear,
+      User
     ]),
     ScheduleModule.forRoot()
   ],
-  controllers: [MusicSchedulersController, MusicController, ArtistController],
+  controllers: [MusicSchedulersController, MusicController, ArtistController, AuthController],
   providers: [
     ArtistGenerator,
     YoutubeUtils,
@@ -102,7 +108,11 @@ import { User } from "./domain/user/entity/user.entity";
     MusicSchedulerUtil,
     MusicService,
     GetChartUtil,
-    ArtistService
+    ArtistService,
+    GoogleStrategy,
+    AuthService,
+    JwtGenerator,
+    JwtService
   ]
 })
 export class AppModule {}

@@ -10,6 +10,8 @@ export class User {
   readonly name: string;
   @Column()
   readonly socialId: string;
+  @Column({ unique: true })
+  readonly email: string;
   @Column({
     type: "enum",
     enum: SocialType
