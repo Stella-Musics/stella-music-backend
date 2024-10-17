@@ -9,7 +9,7 @@ import { TokenResponse } from "../data/response/token.response";
 export class AuthController {
   constructor(
     private readonly configService: ConfigService,
-    private readonly authSerivce: AuthService
+    private readonly authService: AuthService
   ) {}
 
   @Get("google")
@@ -33,6 +33,6 @@ export class AuthController {
     @Param("socialType") socialType: SocialType,
     @Headers("authorization") accessToken: string
   ): Promise<TokenResponse> {
-    return await this.authSerivce.signIn(socialType, accessToken);
+    return await this.authService.signIn(socialType, accessToken);
   }
 }
