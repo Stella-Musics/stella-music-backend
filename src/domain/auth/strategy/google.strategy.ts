@@ -16,7 +16,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, "google") {
   ) {
     super({
       clientID: configService.get<string>("GOOGLE_CLIENT_ID"),
-      clientSecret: configService.get<string>("GOOGLE_CLIENT_PASSWORD"),
+      clientSecret: configService.get<string>("GOOGLE_CLIENT_SECRET"),
       callbackURL: configService.get<string>("GOOGLE_CLIENT_REDIRECT_URL"),
       passReqToCallback: true,
       scope: ["profile", "email"] // 가져올 정보들
