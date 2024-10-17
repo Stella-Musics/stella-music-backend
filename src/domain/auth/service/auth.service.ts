@@ -23,7 +23,7 @@ export class AuthService {
       const generatedUser = socialUserDto.toUser();
       return await this.userRepository.save(generatedUser);
     } else if (socialUserDto.socialType !== user.socialType) {
-      throw new HttpException("해당 유저가 이미 존재함", HttpStatus.CONFLICT);
+      throw new HttpException("이미 다른 소셜 계정으로 가입된 유저입니다.", HttpStatus.CONFLICT);
     }
 
     const updatedData = socialUserDto.toUser();
@@ -58,12 +58,17 @@ export class AuthService {
   }
 
   private async signInWithGoogle(accessToken: string): Promise<User> {
-    const response = await axios.get("https://www.googleapis.com/userinfo/v2/me", {
-      headers: {
-        Authorization: "Bearer " + accessToken,
-        "Content-Type": "application/json"
-      }
-    });
+    let response;
+    try {
+      response = await axios.get("https://www.googleapis.com/userinfo/v2/me", {
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json"
+        }
+      });
+    } catch (error) {
+      throw new HttpException("구글 로그인 중 오류가 발생했습니다.", HttpStatus.UNAUTHORIZED);
+    }
 
     const { name, id, email } = response.data;
 
