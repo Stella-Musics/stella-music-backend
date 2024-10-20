@@ -14,7 +14,8 @@ export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly jwtGenerator: JwtGenerator
+    private readonly jwtGenerator: JwtGenerator,
+    private readonly tokenValidator: TokenValidator
   ) {}
 
   async validateSocialUser(socialUserDto: SocialUserDto): Promise<User> {
@@ -27,6 +28,7 @@ export class AuthService {
       throw new HttpException("이미 다른 소셜 계정으로 가입된 유저입니다.", HttpStatus.CONFLICT);
     }
 
+    socialUserDto.name = socialUserDto.name ?? user.name;
     const updatedData = socialUserDto.toUser();
     const updatedUser = await this.userRepository.create({
       ...user,
@@ -39,22 +41,29 @@ export class AuthService {
     return await this.userRepository.save(updatedUser);
   }
 
-  async signIn(socialType: SocialType, accessToken: string | null): Promise<TokenResponse> {
+  async signIn(
+    socialType: SocialType,
+    accessToken: string | null,
+    userName: string | null = null
+  ): Promise<TokenResponse> {
     if (!accessToken) throw new HttpException("올바르지 않은 요청입니다.", HttpStatus.BAD_REQUEST);
 
+    let user: User;
     if (socialType === SocialType.GOOGLE) {
-      const user = await this.signInWithGoogle(accessToken);
-      const token = await this.jwtGenerator.generateToken(user);
-
-      const tokenResponse = new TokenResponse(
-        token.accessToken,
-        token.refreshToken,
-        token.accessExpiresIn
-      );
-      return tokenResponse;
+      user = await this.signInWithGoogle(accessToken);
+    } else if (socialType === SocialType.APPLE) {
+      user = await this.signInWithApple(accessToken, userName);
     } else {
       throw new HttpException("지원되지 않는 소셜 로그인입니다.", HttpStatus.BAD_REQUEST);
     }
+
+    const token = await this.jwtGenerator.generateToken(user);
+    const tokenResponse = new TokenResponse(
+      token.accessToken,
+      token.refreshToken,
+      token.accessExpiresIn
+    );
+    return tokenResponse;
   }
 
   private async signInWithGoogle(accessToken: string): Promise<User> {
