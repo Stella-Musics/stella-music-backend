@@ -4,7 +4,7 @@ import { SocialType } from "src/domain/user/enums/social.type";
 export class SocialUserDto {
   constructor(socialProfile: {
     socialId: string;
-    name: string;
+    name: string | null;
     socialType: SocialType;
     email: string;
   }) {
@@ -15,12 +15,18 @@ export class SocialUserDto {
   }
   readonly socialId: string;
   readonly email: string;
-  readonly name: string;
+  name: string | null;
   readonly socialType: SocialType;
 
-  toUser(): { email: string; socialId: string; name: string; socialType: SocialType; role: Role } {
+  toUser(): {
+    email: string;
+    socialId: string;
+    name: string;
+    socialType: SocialType;
+    role: Role;
+  } {
     const socialId = this.socialId;
-    const name = this.name;
+    const name = this.name ?? "";
     const socialType = this.socialType;
     const email = this.email;
     return {
