@@ -7,6 +7,7 @@ import { SocialType } from "src/domain/user/enums/social.type";
 import axios from "axios";
 import { JwtGenerator } from "src/global/jwt/jwt.generator";
 import { TokenResponse } from "../data/response/token.response";
+import { TokenValidator } from "../util/token.validator";
 
 @Injectable()
 export class AuthService {
@@ -79,6 +80,21 @@ export class AuthService {
       email: email,
       name: name,
       socialType: SocialType.GOOGLE
+    });
+
+    return await this.validateSocialUser(socialUserDto);
+  }
+
+  private async signInWithApple(identityToken: string, userName: string | null): Promise<User> {
+    const { sub, email } = await this.tokenValidator.verifyAppleIdentityToken(identityToken);
+    if (!sub || !email) {
+      throw new HttpException("유효하지 않은 idToken입니다.", HttpStatus.BAD_REQUEST);
+    }
+    const socialUserDto = new SocialUserDto({
+      socialId: sub,
+      email: email,
+      name: userName,
+      socialType: SocialType.APPLE
     });
 
     return await this.validateSocialUser(socialUserDto);
