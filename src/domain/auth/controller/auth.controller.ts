@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Res, Req, Post, Param, Headers } from "@nestjs/common";
+import { Controller, Get, UseGuards, Res, Req, Post, Param, Headers, Body } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AuthGuard } from "@nestjs/passport";
 import { SocialType } from "src/domain/user/enums/social.type";
@@ -33,8 +33,9 @@ export class AuthController {
   @Post(":socialType")
   async loginSocial(
     @Param("socialType") socialType: SocialType,
-    @Headers("authorization") accessToken: string
+    @Headers("authorization") accessToken: string,
+    @Body("userName") userName: string | null = null
   ): Promise<TokenResponse> {
-    return await this.authService.signIn(socialType, accessToken);
+    return await this.authService.signIn(socialType, accessToken, userName);
   }
 }
