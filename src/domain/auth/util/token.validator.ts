@@ -18,7 +18,7 @@ export class TokenValidator {
       algorithms: ["RS256"]
     });
 
-    return verifiedToken;
+    return verifiedToken as jwt.JwtPayload;
   }
 
   private async getApplePublicKey(kid: string): Promise<string> {
