@@ -22,26 +22,27 @@ export class TokenValidator {
   }
 
   private async getApplePublicKey(kid: string): Promise<string> {
+    let keys;
     try {
       // Apple의 공개 키 목록을 가져옴
       const response = await axios.get("https://appleid.apple.com/auth/keys");
-      const keys = response.data.keys;
-
-      // 해당 kid에 맞는 공개 키 찾기
-      const key = keys.find((key) => key.kid === kid);
-
-      if (!key) {
-        throw new Error("Public key not found");
-      }
-
-      // JWK를 PEM 형식으로 변환
-      const pem = jwkToPem(key);
-      return pem;
+      keys = response.data.keys;
     } catch (error) {
       throw new HttpException(
-        "Failed to retrieve Apple's public keys",
+        "애플 퍼블릭 키를 가져오는 중 에러",
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
+
+    // 해당 kid에 맞는 공개 키 찾기
+    const key = keys.find((key) => key.kid === kid);
+
+    if (!key) {
+      throw new HttpException("퍼블릭 키를 찾을 수 없음", HttpStatus.NOT_FOUND);
+    }
+
+    // JWK를 PEM 형식으로 변환
+    const pem = jwkToPem(key);
+    return pem;
   }
 }
