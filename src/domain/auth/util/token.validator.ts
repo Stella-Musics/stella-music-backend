@@ -8,7 +8,7 @@ export class TokenValidator {
   async verifyAppleIdentityToken(identityToken: string) {
     const decodedToken = jwt.decode(identityToken, { complete: true });
 
-    if (!decodedToken) {
+    if (!decodedToken || !decodedToken.header || !decodedToken.header.kid) {
       throw new Error("Invalid identity token");
     }
 
