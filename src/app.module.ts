@@ -36,6 +36,7 @@ import { GoogleStrategy } from "./domain/auth/strategy/google.strategy";
 import { AuthService } from "./domain/auth/service/auth.service";
 import { JwtGenerator } from "./global/jwt/jwt.generator";
 import { JwtService } from "@nestjs/jwt";
+import { TokenValidator } from "./domain/auth/util/token.validator";
 
 @Module({
   imports: [
@@ -112,7 +113,8 @@ import { JwtService } from "@nestjs/jwt";
     GoogleStrategy,
     AuthService,
     JwtGenerator,
-    JwtService
+    JwtService,
+    TokenValidator
   ]
 })
 export class AppModule {}
