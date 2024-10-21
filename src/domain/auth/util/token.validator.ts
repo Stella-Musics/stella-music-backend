@@ -15,7 +15,8 @@ export class TokenValidator {
     // Apple의 공개 키로 검증
     const applePublicKey = await this.getApplePublicKey(decodedToken.header.kid || ""); // Apple의 공개 키를 가져오는 함수
     const verifiedToken = jwt.verify(identityToken, applePublicKey, {
-      algorithms: ["RS256"]
+      algorithms: ["RS256"],
+      issuer: "https://appleid.apple.com"
     });
 
     return verifiedToken as jwt.JwtPayload;
