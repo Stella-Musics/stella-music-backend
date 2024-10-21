@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import axios from "axios";
 import * as jwkToPem from "jwk-to-pem";
 import * as jwt from "jsonwebtoken";
@@ -22,19 +22,26 @@ export class TokenValidator {
   }
 
   private async getApplePublicKey(kid: string): Promise<string> {
-    // Apple의 공개 키 목록을 가져옴
-    const response = await axios.get("https://appleid.apple.com/auth/keys");
-    const keys = response.data.keys;
+    try {
+      // Apple의 공개 키 목록을 가져옴
+      const response = await axios.get("https://appleid.apple.com/auth/keys");
+      const keys = response.data.keys;
 
-    // 해당 kid에 맞는 공개 키 찾기
-    const key = keys.find((key) => key.kid === kid);
+      // 해당 kid에 맞는 공개 키 찾기
+      const key = keys.find((key) => key.kid === kid);
 
-    if (!key) {
-      throw new Error("Public key not found");
+      if (!key) {
+        throw new Error("Public key not found");
+      }
+
+      // JWK를 PEM 형식으로 변환
+      const pem = jwkToPem(key);
+      return pem;
+    } catch (error) {
+      throw new HttpException(
+        "Failed to retrieve Apple's public keys",
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
-
-    // JWK를 PEM 형식으로 변환
-    const pem = jwkToPem(key);
-    return pem;
   }
 }
