@@ -6,6 +6,6 @@ export class MusicListResponse {
     this.list = list;
   }
 
-  @ApiProperty({ description: "노래 목록", type: MusicResponse })
+  @ApiProperty({ description: "노래 목록", type: [MusicResponse] })
   readonly list: MusicResponse[];
 }
