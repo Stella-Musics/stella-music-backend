@@ -11,6 +11,12 @@ export class ArtistResponse {
   readonly id: number;
   @ApiProperty({ description: "스텔라 이름" })
   readonly name: string;
-  @ApiProperty({ description: "스텔라 채널 url" })
+  @ApiProperty({
+    description: "스텔라 채널 url",
+    properties: {
+      name: { type: "string", description: "URL 이름" },
+      url: { type: "string", description: "URL 주소" }
+    }
+  })
   readonly urls: { name: string; url: string }[];
 }
