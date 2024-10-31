@@ -36,6 +36,6 @@ export class MusicResponse {
   readonly TJKaraokeCode: number | null;
   @ApiProperty({ description: "금영 노래방 코드", type: Number })
   readonly KYKaraokeCode: number | null;
-  @ApiProperty({ description: "참여자 목록", type: ParticipantInfo })
+  @ApiProperty({ description: "참여자 목록", type: [ParticipantInfo] })
   readonly participantInfos: ParticipantInfo[];
 }

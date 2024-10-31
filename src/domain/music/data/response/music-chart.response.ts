@@ -44,6 +44,6 @@ export class MusicChartResponse {
   readonly rise: number;
   @ApiProperty({ description: "차트 순위" })
   readonly ranking: number;
-  @ApiProperty({ description: "참여자 목록", type: ParticipantInfo })
+  @ApiProperty({ description: "참여자 목록", type: [ParticipantInfo] })
   readonly participantInfos: ParticipantInfo[];
 }
