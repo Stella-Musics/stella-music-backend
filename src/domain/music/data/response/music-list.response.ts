@@ -1,5 +1,11 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { MusicResponse } from "./music.response";
 
 export class MusicListResponse {
-  constructor(readonly list: MusicResponse[]) {}
+  constructor(list: MusicResponse[]) {
+    this.list = list;
+  }
+
+  @ApiProperty({ description: "노래 목록", type: [MusicResponse] })
+  readonly list: MusicResponse[];
 }

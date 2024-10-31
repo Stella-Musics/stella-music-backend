@@ -6,7 +6,9 @@ import { MusicInfoEachWeekScheduler } from "../util/music-info-each-week.schedul
 import { MusicInfoEachYearScheduler } from "../util/music-info-each-year.scheduler";
 import { ApiKeyGuard } from "src/global/api/api-key.guard";
 import { ApiKey } from "src/global/api/api-key.decorator";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("Music Schedulers")
 @Controller("music-schedulers")
 export class MusicSchedulersController {
   constructor(
